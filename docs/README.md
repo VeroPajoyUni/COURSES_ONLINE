@@ -4,41 +4,18 @@
 Su objetivo principal es **evaluar la calidad del software**, garantizando modularidad, mantenibilidad y trazabilidad entre componentes.
 
 El sistema implementa las siguientes **historias de usuario principales**:
-- 🟢 **HU04:** Previsualizar curso.  
-- 🟠 **HU06:** Realizar curso.  
-- 🔵 **HU08:** Generar certificado.  
+- **HU04:** Previsualizar curso.  
+- **HU06:** Realizar curso.  
+- **HU08:** Generar certificado.  
 
-## 🧱 Estructura del Proyecto
-
-COURSESONLINE/
-│
-├── frontend/
-│   ├── assets/
-│   │   ├── img/
-│   │   └── js/
-│   ├── styles/
-│   ├── views/
-│   ├── controllers/
-│   └── models/
-│
-├── backend/
-│   ├── models/
-│   ├── controllers/
-│   ├── views/
-│   ├── utils/
-│   └── tests/
-│
-├── docs/
-│   └── calidad_software/
-│
-└── .gitignore
+## Estructura del Proyecto
 
 ## 🖥️ FRONTEND
 
 El **frontend** gestiona la interfaz visual del sistema, permitiendo la interacción del usuario mediante vistas HTML, estilos CSS y lógica JavaScript.
 
 <details>
-<summary>📂 <b>assets/</b></summary>
+<summary><b>assets/</b></summary>
 
 Contiene todos los **recursos estáticos** del proyecto.
 
@@ -54,7 +31,7 @@ Contiene todos los **recursos estáticos** del proyecto.
 </details>
 
 <details>
-<summary>🎨 <b>styles/</b></summary>
+<summary><b>styles/</b></summary>
 
 Define la presentación visual del proyecto.
 
@@ -67,7 +44,7 @@ Define la presentación visual del proyecto.
 </details>
 
 <details>
-<summary>📄 <b>views/</b></summary>
+<summary><b>views/</b></summary>
 
 Contiene las **páginas HTML** que verá el usuario:
 - `index.html` → página principal y buscador de cursos.  
@@ -77,7 +54,7 @@ Contiene las **páginas HTML** que verá el usuario:
 </details>
 
 <details>
-<summary>🧠 <b>controllers/</b></summary>
+<summary><b>controllers/</b></summary>
 
 Controlan la interacción entre las vistas y los modelos del frontend.
 
@@ -89,7 +66,7 @@ Controlan la interacción entre las vistas y los modelos del frontend.
 </details>
 
 <details>
-<summary>🧩 <b>models/</b></summary>
+<summary><b>models/</b></summary>
 
 Define las estructuras de datos equivalentes a las tablas del modelo SQL.
 
@@ -106,14 +83,14 @@ Define las estructuras de datos equivalentes a las tablas del modelo SQL.
 El **backend** implementa la lógica de negocio, conexión con la base de datos `cursos_online` y generación de certificados PDF, todo en **Python puro**.
 
 <details>
-<summary>🐍 <b>app.py</b></summary>
+<summary><b>app.py</b></summary>
 
 Archivo principal del servidor.  
 Define rutas, inicializa los controladores y coordina la comunicación con el frontend.
 </details>
 
 <details>
-<summary>🗃️ <b>models/</b></summary>
+<summary><b>models/</b></summary>
 
 Cada archivo representa una **tabla de la base de datos** y gestiona sus operaciones CRUD.
 
@@ -127,7 +104,7 @@ Ejemplos:
 </details>
 
 <details>
-<summary>🧭 <b>controllers/</b></summary>
+<summary><b>controllers/</b></summary>
 
 Implementan la lógica de negocio y coordinan la interacción entre los modelos y las vistas.
 
@@ -140,7 +117,7 @@ Implementan la lógica de negocio y coordinan la interacción entre los modelos 
 </details>
 
 <details>
-<summary>🖼️ <b>views/</b></summary>
+<summary><b>views/</b></summary>
 
 Define las respuestas enviadas al frontend.  
 
@@ -149,7 +126,7 @@ Define las respuestas enviadas al frontend.
 </details>
 
 <details>
-<summary>🧰 <b>utils/</b></summary>
+<summary><b>utils/</b></summary>
 
 Contiene herramientas auxiliares reutilizables:
 
@@ -159,7 +136,7 @@ Contiene herramientas auxiliares reutilizables:
 </details>
 
 <details>
-<summary>🧪 <b>tests/</b></summary>
+<summary><b>tests/</b></summary>
 
 Pruebas unitarias e integrales para medir la **calidad del software**:
 
@@ -173,7 +150,7 @@ Pruebas unitarias e integrales para medir la **calidad del software**:
 ## 📚 DOCUMENTACIÓN
 
 <details>
-<summary>📁 <b>docs/</b></summary>
+<summary><b>docs/</b></summary>
 
 Contiene la documentación técnica y de calidad del proyecto.
 
@@ -186,22 +163,11 @@ Contiene la documentación técnica y de calidad del proyecto.
   - `validacion_funcional.md`
 </details>
 
-## 🧾 `.gitignore`
+#### `.gitignore`
 
 Archivo que indica los elementos **no versionables** (archivos temporales, entornos virtuales, cachés, etc.).
 
-## ✅ Resumen General
-
-| Elemento | Descripción |
-|-----------|-------------|
-| **Arquitectura** | MVC (Modelo–Vista–Controlador) |
-| **Frontend** | HTML, CSS, JavaScript puro |
-| **Backend** | Python sin frameworks |
-| **Base de datos** | `cursos_online` (MySQL) |
-| **Historias de Usuario** | HU04 – Previsualizar curso <br> HU06 – Realizar curso <br> HU08 – Generar certificado |
-| **Objetivo principal** | Evaluar la calidad del software y aplicar buenas prácticas de desarrollo |
-
-## 💡 Objetivos del Proyecto
+## Objetivos del Proyecto
 
 - Diseñar una estructura limpia y escalable sin depender de frameworks.  
 - Aplicar el patrón MVC tanto en frontend como en backend.  
@@ -212,4 +178,5 @@ Archivo que indica los elementos **no versionables** (archivos temporales, entor
 - *Yisel Verónica Pajoy Maca*
 - *Adiel Felipe Espinosa Muñoz*
 - *Yeison Alexis Añasco Benavides*
-📚 *Proyecto académico — Plataforma de Cursos Online*
+
+*Proyecto académico — Plataforma de Cursos Online*
