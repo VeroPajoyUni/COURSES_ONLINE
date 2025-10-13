@@ -1,0 +1,16 @@
+{
+  "name": "coursesc_online_frontend",
+  "version": "1.0.0",
+  "description": "Frontend del proyecto COURSESONLINE - Aplicación web educativa desarrollada sin frameworks, utilizando HTML, CSS y JavaScript puro.",
+  "main": "index.js",
+  "scripts": {
+    "start": "lite-server"
+  },
+  "author": "Yisel Verónica Pajoy Maca, Adiel Felipe Esponisa Muñoz, Yeison Alexis Añasco Benavides",
+  "license": "MIT",
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "eslint": "^9.37.0",
+    "prettier": "^3.6.2"
+  }
+}

@@ -1,0 +1,80 @@
+# =============================
+# DEPENDENCIAS NODE (Frontend)
+# =============================
+frontend/node_modules/
+frontend/package-lock.json
+
+# =============================
+# PYTHON (Backend)
+# =============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+env/
+venv/
+ENV/
+.venv/
+*.egg-info/
+*.egg
+
+# =============================
+# CONFIGURACIONES
+# =============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# =============================
+# ARCHIVOS TEMPORALES
+# =============================
+*.tmp
+*.temp
+*.cache
+*.log
+
+# =============================
+# ARCHIVOS DE SISTEMA
+# =============================
+desktop.ini
+
+# =============================
+# ARCHIVOS GENERADOS
+# =============================
+*.pdf
+*.csv
+*.xlsx
+*.zip
+*.rar
+*.tar
+*.gz
+
+# =============================
+# VARIABLES DE ENTORNO (opcional)
+# =============================
+.env
+config.json
+secrets.json
+
+# =============================
+# ARCHIVOS DE SERVIDOR
+# =============================
+__pycache__/
+backend/__pycache__/
+backend/tests/__pycache__/
+backend/models/__pycache__/
+backend/controllers/__pycache__/
+
+# =============================
+# PRUEBAS
+# =============================
+coverage/
+htmlcov/
+.pytest_cache/

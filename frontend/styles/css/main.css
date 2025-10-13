@@ -1,0 +1,128 @@
+/* ==============================
+   ESTILOS GENERALES
+============================== */
+:root {
+  --color-principal: #004aad;
+  --color-secundario: #007bff;
+  --color-fondo: #f4f6fa;
+  --color-texto: #222;
+  --color-tarjeta: #fff;
+  --sombra: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --transicion: all 0.3s ease;
+  --borde-radio: 12px;
+  --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+/* ==============================
+   ENCABEZADO
+============================== */
+header {
+  background-color: var(--color-principal);
+  color: white;
+  text-align: center;
+  padding: 1.5rem 0;
+  box-shadow: var(--sombra);
+}
+
+header h1 {
+  font-size: 2rem;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+/* ==============================
+   SECCIÓN DE CURSOS
+============================== */
+main {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.cursos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ==============================
+   TARJETAS DE CURSOS
+============================== */
+.card {
+  background-color: var(--color-tarjeta);
+  border-radius: var(--borde-radio);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+  transition: var(--transicion);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  color: var(--color-principal);
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.card button {
+  background-color: var(--color-secundario);
+  color: white;
+  border: none;
+  border-radius: var(--borde-radio);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: var(--transicion);
+  margin-top: 1rem;
+}
+
+.card button:hover {
+  background-color: #0056c1;
+  transform: scale(1.05);
+}
+
+/* ==============================
+   MENSAJE DE SIN CURSOS
+============================== */
+.cursos-lista p {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+  }
+}
