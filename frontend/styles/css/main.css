@@ -2,101 +2,196 @@
    ESTILOS GENERALES
 ============================== */
 :root {
-  --color-principal: #004aad;
-  --color-secundario: #007bff;
-  --color-fondo: #f4f6fa;
-  --color-texto: #222;
-  --color-tarjeta: #fff;
-  --sombra: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --color-primario: #1e76c9; /* Azul profesional */
+  --color-secundario: #000000;
+  --color-acento: #e59fec; /* Amarillo brillante */
+  --color-fondo: #f9fafb;
+  --color-texto: #1f2937;
+  --color-blanco: #ffffff;
+  --color-gris: #6b7280;
+  --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radio-borde: 14px;
   --transicion: all 0.3s ease;
-  --borde-radio: 12px;
-  --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --fuente: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: var(--fuente-principal);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  font-family: var(--fuente);
   background-color: var(--color-fondo);
   color: var(--color-texto);
+  line-height: 1.6;
 }
 
 /* ==============================
    ENCABEZADO
 ============================== */
 header {
-  background-color: var(--color-principal);
-  color: white;
-  text-align: center;
-  padding: 1.5rem 0;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+  color: var(--color-blanco);
   box-shadow: var(--sombra);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: var(--transicion);
 }
 
-header h1 {
-  font-size: 2rem;
-  letter-spacing: 2px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ==============================
+   FUENTE Y ESTILO HEADER
+============================== */
+@import url('https://fonts.googleapis.com/css2?family=Gabriela&display=swap');
+
+.brand-text h1 {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 1px;
   margin: 0;
+  margin-bottom: 0.3rem;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slogan {
+  font-family: 'Gabriola', 'Gabriela', serif;
+  font-size: 2rem;
+  font-style: italic;
+  opacity: 0.95;
+  position: relative;
+  display: inline-block;
+  color: #f3f4f6;
+}
+
+/* Línea delicada debajo del slogan */
+.slogan::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  margin: 0.4rem auto 0;
+  border-radius: 2px;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.main-nav a {
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transicion);
+}
+
+.main-nav a:hover {
+  color: var(--color-acento);
 }
 
 /* ==============================
    SECCIÓN DE CURSOS
 ============================== */
 main {
-  padding: 2rem 1rem;
   max-width: 1200px;
-  margin: auto;
+  margin: 0px auto;
+  padding: 0px;
 }
 
 .cursos-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: inherit;
+  justify-content: center;
+  align-items: stretch;
 }
 
 /* ==============================
    TARJETAS DE CURSOS
 ============================== */
 .card {
-  background-color: var(--color-tarjeta);
-  border-radius: var(--borde-radio);
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-borde);
   box-shadow: var(--sombra);
   padding: 1.5rem;
+  margin: 1.5rem;
   transition: var(--transicion);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  width: 350px;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+  transition: var(--transicion);
+}
+
+.card:hover::before {
+  left: 0;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
 .card h3 {
-  color: var(--color-principal);
+  color: var(--color-primario);
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
 }
 
 .card p {
-  margin: 0.3rem 0;
+  color: var(--color-gris);
   font-size: 0.95rem;
+  margin-bottom: 0.8rem;
 }
 
 .card button {
-  background-color: var(--color-secundario);
-  color: white;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
   border: none;
-  border-radius: var(--borde-radio);
-  padding: 0.6rem 1rem;
+  border-radius: var(--radio-borde);
+  padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   align-self: flex-start;
   transition: var(--transicion);
-  margin-top: 1rem;
 }
 
 .card button:hover {
-  background-color: #0056c1;
+  background-color: var(--color-secundario);
   transform: scale(1.05);
 }
 
@@ -106,23 +201,19 @@ main {
 .cursos-lista p {
   grid-column: 1 / -1;
   text-align: center;
-  color: #666;
+  color: var(--color-gris);
   font-size: 1.1rem;
 }
 
 /* ==============================
-   RESPONSIVE
+   PIE DE PÁGINA
 ============================== */
-@media (max-width: 600px) {
-  header h1 {
-    font-size: 1.6rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
-
-  .card h3 {
-    font-size: 1.1rem;
-  }
+footer {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  margin-top: 3rem;
 }

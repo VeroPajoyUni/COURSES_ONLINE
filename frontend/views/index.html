@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>COURSESONLINE</title>
+  <title>OpenMind</title>
   <link rel="stylesheet" href="../styles/css/main.css" />
 </head>
+
 <body>
-  <header>
-    <h1>CURSOS ONLINE</h1>
+  <header class="header">
+    <div class="brand">
+      <div class="brand-text">
+        <h1>OpenMind</h1>
+        <p class="slogan">El conocimiento abre tu mente</p>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Iniciar sesión</a></li>
+        <li><a href="#">Registrarse</a></li>
+        <li><a href="#">Cursos</a></li>
+        <li><a href="#">Certificados</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
   </header>
 
   <main>
     <section id="cursos-container" class="cursos-lista"></section>
   </main>
 
+  <footer class="footer">
+    <p>&copy; 2025 OpenMind</p>
+  </footer>
+
   <script type="module" src="../controllers/cursosController.js"></script>
+  
 </body>
 </html>
