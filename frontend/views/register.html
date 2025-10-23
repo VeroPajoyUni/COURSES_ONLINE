@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrarse - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/register.css" />
+</head>
+
+<body>
+  <div class="register-container">
+    <div class="register-box">
+      <div class="logo">
+        <h1>OpenMind</h1>
+        <p class="slogan">El conocimiento abre tu mente</p>
+      </div>
+
+      <h2>Crear Cuenta</h2>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            name="nombre" 
+            placeholder="Juan Pérez"
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="correo" 
+            name="correo" 
+            placeholder="ejemplo@correo.com"
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="contrasenia">Contraseña</label>
+          <input 
+            type="password" 
+            id="contrasenia" 
+            name="contrasenia" 
+            placeholder="Mínimo 6 caracteres"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmar-contrasenia">Confirmar contraseña</label>
+          <input 
+            type="password" 
+            id="confirmar-contrasenia" 
+            name="confirmar-contrasenia" 
+            placeholder="Repite tu contraseña"
+            required 
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id_rol">Tipo de usuario</label>
+            <select id="id_rol" name="id_rol" required>
+              <option value="">Selecciona...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="id_tipo_documento">Tipo de documento</label>
+            <select id="id_tipo_documento" name="id_tipo_documento" required>
+              <option value="">Selecciona...</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="mensaje" class="mensaje" style="display: none;"></div>
+
+        <button type="submit" class="btn-register">Registrarse</button>
+      </form>
+
+      <div class="form-footer">
+        <p>¿Ya tienes una cuenta? <a href="./login.html">Inicia sesión aquí</a></p>
+        <p><a href="./index.html">Volver al inicio</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../controllers/registerController.js"></script>
+</body>
+
+</html>
