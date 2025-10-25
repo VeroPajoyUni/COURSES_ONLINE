@@ -15,6 +15,18 @@ export async function getCursos() {
   }
 }
 
+export async function getCursoDetalle(id_curso) {
+  try {
+    const respuesta = await fetch(`${API_URL}/cursos/${id_curso}`);
+    const data = await respuesta.json();
+    console.log("Detalle del curso obtenido:", data);
+    return data;
+  } catch (error) {
+    console.error("Error al obtener detalle del curso:", error);
+    return null;
+  }
+}
+
 // ========================================
 // AUTENTICACIÓN
 // ========================================

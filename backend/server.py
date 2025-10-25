@@ -1,6 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from urllib.parse import urlparse
+import re
+from datetime import date, datetime
 from controllers.cursos_controller import CursosController
 from controllers.auth_controller import AuthController
 
@@ -11,12 +13,25 @@ class ServidorBasico(BaseHTTPRequestHandler):
         if ruta == "/api/cursos":
             cursos = CursosController().listar_cursos()
             self._enviar_respuesta(200, cursos)
+        
         elif ruta == "/api/roles":
             roles = AuthController().obtener_roles()
             self._enviar_respuesta(200, roles)
+        
         elif ruta == "/api/tipos-documento":
             tipos = AuthController().obtener_tipos_documento()
             self._enviar_respuesta(200, tipos)
+        
+        elif re.match(r'^/api/cursos/\d+$', ruta):
+            # Extraer el ID del curso de la URL
+            id_curso = int(ruta.split('/')[-1])
+            curso = CursosController().obtener_detalle_curso(id_curso)
+            
+            if curso:
+                self._enviar_respuesta(200, curso)
+            else:
+                self._enviar_respuesta(404, {"mensaje": "Curso no encontrado"})
+        
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
@@ -35,6 +50,7 @@ class ServidorBasico(BaseHTTPRequestHandler):
             
             codigo = 200 if respuesta["exito"] else 401
             self._enviar_respuesta(codigo, respuesta)
+        
         elif ruta == "/api/register":
             nombre = datos.get("nombre")
             correo = datos.get("correo")
@@ -46,6 +62,7 @@ class ServidorBasico(BaseHTTPRequestHandler):
             
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
+        
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
@@ -62,7 +79,13 @@ class ServidorBasico(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(json.dumps(contenido, ensure_ascii=False, indent=2).encode("utf-8"))
+        self.wfile.write(json.dumps(contenido, ensure_ascii=False, indent=2, default=self._convertir_fecha).encode("utf-8"))
+
+    def _convertir_fecha(self, obj):
+        """Convierte objetos date y datetime a string para JSON"""
+        if isinstance(obj, (date, datetime)):
+            return obj.isoformat()
+        raise TypeError(f"Tipo {type(obj)} no es serializable")
 
 if __name__ == "__main__":
     servidor = HTTPServer(("localhost", 5000), ServidorBasico)
