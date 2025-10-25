@@ -38,7 +38,7 @@ class Auth:
         self.db.ejecutar(consulta, (correo,))
         return self.db.obtener_uno() is not None
 
-    def registrar_usuario(self, nombre, correo, contrasenia, id_rol, id_tipo_documento):
+    def registrar_usuario(self, nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion):
         """
         Registra un nuevo usuario en la base de datos.
         """
@@ -47,12 +47,12 @@ class Auth:
         
         consulta = """
             INSERT INTO usuarios 
-            (nombre_usuario, correo, contrasenia, id_rol, id_tipo_documento)
-            VALUES (%s, %s, %s, %s, %s)
+            (nombre_usuario, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
         
         try:
-            self.db.ejecutar(consulta, (nombre, correo, contrasenia_hash, id_rol, id_tipo_documento))
+            self.db.ejecutar(consulta, (nombre, correo, contrasenia_hash, id_rol, id_tipo_documento, numero_identificacion))
             return True
         except Exception as e:
             print(f"Error al registrar usuario: {e}")

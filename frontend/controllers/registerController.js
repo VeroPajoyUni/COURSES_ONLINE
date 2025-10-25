@@ -44,9 +44,10 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
   const confirmarContrasenia = document.getElementById("confirmar-contrasenia").value;
   const id_rol = document.getElementById("id_rol").value;
   const id_tipo_documento = document.getElementById("id_tipo_documento").value;
+  const numero_identificacion = document.getElementById("numero_identificacion").value.trim();
 
   // Validaciones
-  if (!nombre || !correo || !contrasenia || !id_rol || !id_tipo_documento) {
+  if (!nombre || !correo || !contrasenia || !id_rol || !id_tipo_documento || !numero_identificacion) {
     mostrarMensaje("Por favor, completa todos los campos", "error");
     return;
   }
@@ -62,7 +63,7 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
   }
 
   // Intentar registrar
-  const respuesta = await registrarUsuario(nombre, correo, contrasenia, id_rol, id_tipo_documento);
+  const respuesta = await registrarUsuario(nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion);
 
   if (respuesta.exito) {
     mostrarMensaje(respuesta.mensaje, "exito");

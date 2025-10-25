@@ -57,8 +57,9 @@ class ServidorBasico(BaseHTTPRequestHandler):
             contrasenia = datos.get("contrasenia")
             id_rol = datos.get("id_rol")
             id_tipo_documento = datos.get("id_tipo_documento")
+            numero_identificacion = datos.get("numero_identificacion")
             
-            respuesta = AuthController().registrar(nombre, correo, contrasenia, id_rol, id_tipo_documento)
+            respuesta = AuthController().registrar(nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion)
             
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)

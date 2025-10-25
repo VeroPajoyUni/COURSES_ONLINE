@@ -34,12 +34,12 @@ class AuthController:
                 "mensaje": "Correo o contraseña incorrectos"
             }
 
-    def registrar(self, nombre, correo, contrasenia, id_rol, id_tipo_documento):
+    def registrar(self, nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion):
         """
         Procesa el registro de un nuevo usuario.
         """
         # Validaciones
-        if not nombre or not correo or not contrasenia or not id_rol or not id_tipo_documento:
+        if not nombre or not correo or not contrasenia or not id_rol or not id_tipo_documento or not numero_identificacion:
             return {
                 "exito": False,
                 "mensaje": "Todos los campos son obligatorios"
@@ -59,7 +59,7 @@ class AuthController:
             }
 
         # Intentar registrar
-        if self.auth.registrar_usuario(nombre, correo, contrasenia, id_rol, id_tipo_documento):
+        if self.auth.registrar_usuario(nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion):
             return {
                 "exito": True,
                 "mensaje": "Usuario registrado exitosamente"

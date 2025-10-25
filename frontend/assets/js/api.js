@@ -75,14 +75,14 @@ export function estaAutenticado() {
 // ========================================
 // REGISTRO
 // ========================================
-export async function registrarUsuario(nombre, correo, contrasenia, id_rol, id_tipo_documento) {
+export async function registrarUsuario(nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion) {
   try {
     const respuesta = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre, correo, contrasenia, id_rol, id_tipo_documento }),
+      body: JSON.stringify({ nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion }),
     });
 
     const data = await respuesta.json();
