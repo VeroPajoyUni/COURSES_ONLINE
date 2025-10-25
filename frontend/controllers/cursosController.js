@@ -22,7 +22,7 @@ export async function mostrarCursos() {
         <span class="fechas">
           ${formatearFecha(curso.fecha_inicio)} - ${formatearFecha(curso.fecha_fin)}
         </span>
-        <a href="./curso-detalle.html?id=${curso.id_curso}" class="btn-ver-mas">Ver más</a>
+        <a href="./cursoDetalle.html?id=${curso.id_curso}" class="btn-ver-mas">Ver más</a>
       </div>
     </div>
   `).join("");

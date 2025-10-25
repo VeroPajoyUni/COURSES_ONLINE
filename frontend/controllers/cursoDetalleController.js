@@ -6,7 +6,7 @@ async function cargarDetalleCurso() {
 
   const loading = document.getElementById('loading');
   const error = document.getElementById('error');
-  const contenedor = document.getElementById('curso-detalle');
+  const contenedor = document.getElementById('cursoDetalle');
 
   if (!idCurso) {
     loading.style.display = 'none';
