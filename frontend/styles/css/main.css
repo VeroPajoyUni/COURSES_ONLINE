@@ -217,3 +217,91 @@ footer {
   letter-spacing: 0.5px;
   margin-top: 3rem;
 }
+
+/* ==============================
+   MODAL PERSONALIZADO (ALERTAS MODERNAS)
+============================== */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.custom-modal {
+  background: var(--color-blanco);
+  padding: 2rem;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  animation: slideIn 0.3s ease;
+  border-top: 4px solid var(--color-primario);
+}
+
+.custom-modal h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: var(--color-primario);
+}
+
+.custom-modal p {
+  color: var(--color-texto);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-btn {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.modal-btn:hover {
+  background-color: var(--color-secundario);
+  transform: scale(1.05);
+}
+
+/* === Colores por tipo de mensaje === */
+.custom-modal.info h3 { color: var(--color-primario); }
+.custom-modal.warning h3 { color: #f4b400; }
+.custom-modal.error h3 { color: #d32f2f; }
+.custom-modal.success h3 { color: #2e7d32; }
+
+/* === Animaciones suaves === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* === Responsive (móviles) === */
+@media (max-width: 480px) {
+  .custom-modal {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .custom-modal h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal-btn {
+    font-size: 0.9rem;
+  }
+}

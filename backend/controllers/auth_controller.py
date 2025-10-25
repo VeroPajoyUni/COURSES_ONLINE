@@ -1,7 +1,8 @@
-from models.auth import Auth
+from models.autenticacion import Auth
 
 class AuthController:
     def __init__(self):
+        # Inicializa la clase Auth que agrupa las funcionalidades de autenticación, roles y tipos de documento
         self.auth = Auth()
 
     def login(self, correo, contrasenia):
@@ -38,7 +39,7 @@ class AuthController:
         """
         Procesa el registro de un nuevo usuario.
         """
-        # Validaciones
+        # Validaciones de campos
         if not nombre or not correo or not contrasenia or not id_rol or not id_tipo_documento or not numero_identificacion:
             return {
                 "exito": False,
@@ -51,15 +52,19 @@ class AuthController:
                 "mensaje": "La contraseña debe tener al menos 6 caracteres"
             }
 
-        # Verificar si el correo ya existe
+        # Verificar si el correo ya está registrado
         if self.auth.correo_existe(correo):
             return {
                 "exito": False,
                 "mensaje": "El correo electrónico ya está registrado"
             }
 
-        # Intentar registrar
-        if self.auth.registrar_usuario(nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion):
+        # Intentar registrar el usuario
+        registrado = self.auth.registrar_usuario(
+            nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion
+        )
+        
+        if registrado:
             return {
                 "exito": True,
                 "mensaje": "Usuario registrado exitosamente"
@@ -74,10 +79,30 @@ class AuthController:
         """
         Obtiene todos los roles disponibles.
         """
-        return self.auth.obtener_roles()
+        try:
+            roles = self.auth.obtener_roles()
+            return {
+                "exito": True,
+                "roles": roles
+            }
+        except Exception as e:
+            return {
+                "exito": False,
+                "mensaje": f"Error al obtener roles: {e}"
+            }
 
     def obtener_tipos_documento(self):
         """
         Obtiene todos los tipos de documento disponibles.
         """
-        return self.auth.obtener_tipos_documento()
+        try:
+            tipos = self.auth.obtener_tipos_documento()
+            return {
+                "exito": True,
+                "tipos_documento": tipos
+            }
+        except Exception as e:
+            return {
+                "exito": False,
+                "mensaje": f"Error al obtener tipos de documento: {e}"
+            }

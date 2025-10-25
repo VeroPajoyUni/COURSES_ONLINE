@@ -7,6 +7,9 @@ from controllers.cursos_controller import CursosController
 from controllers.auth_controller import AuthController
 
 class ServidorBasico(BaseHTTPRequestHandler):
+    # ==============================
+    #         PETICIONES GET
+    # ==============================
     def do_GET(self):
         ruta = urlparse(self.path).path
 
