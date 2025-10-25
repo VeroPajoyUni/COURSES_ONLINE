@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle del Curso - OpenMind</title>
+    <link rel="stylesheet" href="../styles/css/main.css" />
+    <link rel="stylesheet" href="../styles/css/curso-detalle.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="brand">
+        <div class="brand-text">
+          <h1>OpenMind</h1>
+          <p class="slogan">El conocimiento abre tu mente</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="./index.html">Inicio</a></li>
+          <li><a href="./login.html">Iniciar sesión</a></li>
+          <li><a href="./register.html">Registrarse</a></li>
+          <li><a href="./index.html">Cursos</a></li>
+          <li><a href="#">Certificados</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div id="loading" class="loading">Cargando curso...</div>
+      <div id="error" class="error" style="display: none">
+        <p>No se pudo cargar el curso.</p>
+        <a href="./index.html" class="btn-volver">Volver a cursos</a>
+      </div>
+
+      <div id="curso-detalle" class="curso-detalle" style="display: none">
+        <!-- El contenido se cargará dinámicamente -->
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2025 OpenMind</p>
+    </footer>
+
+    <script type="module" src="../controllers/cursoDetalleController.js"></script>
+  </body>
+</html>
