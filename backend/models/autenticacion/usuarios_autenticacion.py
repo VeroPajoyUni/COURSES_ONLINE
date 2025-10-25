@@ -1,7 +1,7 @@
-from .database import Database
+from ..database import Database
 import hashlib
 
-class Auth:
+class UsuariosAutenticacion:
     def __init__(self):
         self.db = Database()
 
@@ -57,19 +57,3 @@ class Auth:
         except Exception as e:
             print(f"Error al registrar usuario: {e}")
             return False
-
-    def obtener_roles(self):
-        """
-        Obtiene todos los roles disponibles.
-        """
-        consulta = "SELECT id_rol, nombre_rol FROM roles"
-        self.db.ejecutar(consulta)
-        return self.db.obtener_todos()
-
-    def obtener_tipos_documento(self):
-        """
-        Obtiene todos los tipos de documento disponibles.
-        """
-        consulta = "SELECT id_tipo_documento, nombre_documento FROM tipo_documentos"
-        self.db.ejecutar(consulta)
-        return self.db.obtener_todos()

@@ -1,4 +1,5 @@
 import { getCursoDetalle } from "../assets/js/api.js";
+import { mostrarModal } from "../controllers/modalAlertsController.js";
 
 async function cargarDetalleCurso() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -87,9 +88,16 @@ async function cargarDetalleCurso() {
     </div>
   `;
 
+  // ==== BOTONES ====
+  
   // Event listeners para botones (por ahora solo alertas)
   document.querySelector('.btn-inscribirse').addEventListener('click', () => {
-    alert('Funcionalidad de inscripción próximamente. Necesitas iniciar sesión.');
+    mostrarModal({
+      titulo: "Inicia sesión para continuar",
+      mensaje: "Debes iniciar sesión para inscribirte en este curso.",
+      tipo: "warning",
+      boton: "Entendido"
+    });
   });
 
   document.querySelector('.btn-compartir').addEventListener('click', () => {
@@ -100,7 +108,11 @@ async function cargarDetalleCurso() {
         url: window.location.href
       });
     } else {
-      alert('Compartir no está disponible en este navegador');
+      mostrarModal({
+        titulo: "Compartir no disponible",
+        mensaje: "Tu navegador no permite compartir enlaces directamente.",
+        tipo: "info"
+      });
     }
   });
 }
