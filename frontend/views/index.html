@@ -9,34 +9,20 @@
 </head>
 
 <body>
-  <header class="header">
-    <div class="brand">
-      <div class="brand-text">
-        <h1>OpenMind</h1>
-        <p class="slogan">El conocimiento abre tu mente</p>
-      </div>
-    </div>
-    <nav class="main-nav">
-      <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Iniciar sesión</a></li>
-        <li><a href="#">Registrarse</a></li>
-        <li><a href="#">Cursos</a></li>
-        <li><a href="#">Certificados</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
-  </header>
+  <!-- Contenedores para header y footer modularizados -->
+  <div id="header-container"></div>
 
   <main>
     <section id="cursos-container" class="cursos-lista"></section>
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2025 OpenMind</p>
-  </footer>
+  <div id="footer-container"></div>
 
-  <script type="module" src="../controllers/cursosController.js"></script>
-  
+  <script type="module">
+    import { loadHeaderFooter } from "./controllers/loadComponents.js";
+    loadHeaderFooter();
+  </script>
+
+  <script type="module" src="./controllers/cursosController.js"></script>
 </body>
 </html>

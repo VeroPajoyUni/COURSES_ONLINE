@@ -1,0 +1,22 @@
+:root {
+  /* 🎨 Paleta principal */
+  --color-primario: #667eea;  /* Azul violeta profesional */
+  --color-secundario: #000000;
+  --color-acento: #272727;
+  --color-acento2: #e4e4e4;
+  --color-fondo: #f9fafb;
+  --color-texto: #1f2937;
+  --color-blanco: #ffffff;
+  --color-gris: #6b7280;
+
+  /* 🌈 Estado */
+  --color-error: #d32f2f;
+  --color-warning: #f4b400;
+  --color-success: #2e7d32;
+
+  /* ⚙️ Estilo general */
+  --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radio-borde: 14px;
+  --transicion: all 0.3s ease;
+  --fuente: 'Poppins', 'Segoe UI', sans-serif;
+}
