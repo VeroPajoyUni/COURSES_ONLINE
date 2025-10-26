@@ -1,0 +1,65 @@
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+  color: var(--color-blanco);
+  box-shadow: var(--sombra);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: var(--transicion);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-text h1 {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slogan {
+  font-family: 'Gabriola', 'Gabriela', serif;
+  font-size: 2rem;
+  font-style: italic;
+  color: #f3f4f6;
+  opacity: 0.95;
+  position: relative;
+}
+
+.slogan::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  margin: 0.4rem auto 0;
+  border-radius: 2px;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.main-nav a {
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transicion);
+}
+
+.main-nav a:hover {
+  color: var(--color-acento);
+}

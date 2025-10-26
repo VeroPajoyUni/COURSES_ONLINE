@@ -1,147 +1,152 @@
+@import "./variables.css";
+
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
 }
 
-.loading,
-.error {
+.loading, .error {
   text-align: center;
   padding: 60px 20px;
-  font-size: 18px;
-  color: #666;
+  font-size: 1.2rem;
+  color: var(--color-gris);
 }
 
-.error {
-  color: #c33;
+.error { 
+  color: var(--color-error); 
 }
 
 .btn-volver {
   display: inline-block;
   margin-top: 20px;
   padding: 12px 24px;
-  background: #667eea;
-  color: white;
-  text-decoration: none;
+  background: var(--color-primario);
+  color: var(--color-blanco);
   border-radius: 8px;
-  transition: background 0.3s;
+  text-decoration: none;
+  transition: var(--transicion);
 }
 
-.btn-volver:hover {
-  background: #5568d3;
+.btn-volver:hover { 
+  background: var(--color-secundario); 
 }
 
-/* Header del curso */
+/* ====== Header del curso ====== */
 .curso-header {
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #eef;
 }
 
 .breadcrumb {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
+  font-size: 15px;
+  color: var(--color-gris);
+  margin-bottom: 20px;
 }
 
 .breadcrumb a {
-  color: #667eea;
+  color: var(--color-primario);
   text-decoration: none;
 }
 
-.breadcrumb a:hover {
-  text-decoration: underline;
+.breadcrumb a:hover { 
+  text-decoration: underline; 
 }
 
 .curso-header h1 {
-  font-size: 36px;
-  color: #333;
+  font-size: 38px;
+  color: var(--color-texto);
   margin-bottom: 15px;
+  letter-spacing: 0.5px;
 }
 
 .categoria-tag {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+  color: var(--color-blanco);
+  padding: 8px 18px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 20px;
 }
 
-.curso-header .descripcion {
-  font-size: 18px;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* Grid de información */
+/* ====== Info general: dos columnas ====== */
 .curso-info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
   gap: 20px;
   margin-bottom: 40px;
 }
 
 .info-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--color-fondo);
+  padding: 30px 25px;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
   text-align: center;
+  transition: var(--transicion);
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
 }
 
 .info-card h3 {
-  font-size: 16px;
-  color: #667eea;
-  margin-bottom: 10px;
+  font-size: 18px;
+  color: var(--color-primario);
+  margin-bottom: 12px;
 }
 
 .info-card p {
   font-size: 18px;
-  color: #333;
+  color: var(--color-texto);
   font-weight: 600;
 }
 
-/* Contenido principal */
+/* ====== Contenido y acciones ====== */
 .curso-contenido {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
-.lecciones-section h2 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 25px;
+.lecciones-section {
+  flex: 1 1 60%; /* Contenido del curso a la izquierda */
 }
 
-.lecciones-lista {
+.acciones-section {
+  flex: 1 1 35%; /* Botones a la derecha */
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
+.acciones-section button,
+.acciones-section a {
+  width: 100%;
+}
+
+/* ====== Lista de lecciones ====== */
 .leccion-item {
   display: flex;
   gap: 20px;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: #f5f5f5;
+  padding: 22px 25px;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
+  transition: var(--transicion);
 }
 
 .leccion-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
 }
 
 .leccion-numero {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 42px;
+  height: 42px;
+  background: var(--color-primario);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -151,122 +156,76 @@
   font-size: 18px;
 }
 
-.leccion-info h4 {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.leccion-info p {
-  font-size: 14px;
-  color: #666;
-  line-height: 1.5;
-}
-
-.sin-lecciones {
-  text-align: center;
-  padding: 40px;
-  color: #999;
-  font-style: italic;
-}
-
-/* Sección de acciones */
-.acciones-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  position: sticky;
-  top: 20px;
-  align-self: start;
-}
-
+/* ====== Botones de acciones ====== */
 .btn-inscribirse,
 .btn-compartir,
 .btn-volver-cursos {
-  padding: 14px 24px;
+  padding: 16px 26px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: var(--transicion);
 }
 
 .btn-inscribirse {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primario);
   color: white;
-}
-
-.btn-inscribirse:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
 }
 
 .btn-compartir {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
-}
-
-.btn-compartir:hover {
-  background: #f0f4ff;
+  color: var(--color-primario);
+  border: 2px solid var(--color-primario);
 }
 
 .btn-volver-cursos {
-  background: #f5f5f5;
-  color: #333;
-  display: block;
+  background: transparent;
+  color: var(--color-primario);
+  border: 2px solid var(--color-primario);
+}
+
+.btn-inscribirse:hover,
+.btn-compartir:hover {
+  transform: scale(1.05);
+  background: var(--color-acento2);
+  color: var(--color-secundario);
 }
 
 .btn-volver-cursos:hover {
-  background: #e8e8e8;
+  transform: scale(1.05);
+  background: var(--color-blanco);
+  color: var(--color-secundario);
 }
 
-/* Información de categoría */
+/* ====== Categoría ====== */
 .categoria-info {
-  background: #f9f9f9;
-  padding: 30px;
-  border-radius: 12px;
-  border-left: 4px solid #667eea;
+  background: #f9f9ff;
+  padding: 35px;
+  border-radius: var(--radio-borde);
+  border-left: 5px solid var(--color-primario);
+  box-shadow: var(--sombra);
 }
 
-.categoria-info h3 {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 15px;
-}
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .curso-info-grid {
+    grid-template-columns: 1fr; /* Una columna en móviles */
+  }
 
-.categoria-info p {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
   .curso-contenido {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 
   .acciones-section {
-    position: relative;
-    top: 0;
-  }
-}
-
-@media (max-width: 600px) {
-  .curso-header h1 {
-    font-size: 28px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
-  .curso-info-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .leccion-item {
-    flex-direction: column;
-    align-items: flex-start;
+  .acciones-section button,
+  .acciones-section a {
+    flex: 1 1 100%;
   }
 }
