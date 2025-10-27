@@ -31,7 +31,11 @@ class Database:
 
     def obtener_uno(self):
         return self.cursor.fetchone()
-
+    
+    def confirmar(self):
+        """Confirma (commit) los cambios en la base de datos."""
+        self.conn.commit()
+        
     def cerrar(self):
         self.cursor.close()
         self.connection.close()

@@ -137,7 +137,7 @@ async function cargarDetalleCurso() {
           if (resultado.exito) {
             mostrarModal({
               titulo: "🎉 Inscripción exitosa",
-              mensaje: `¡Felicidades! Te has inscrito correctamente en <b>${curso.titulo_curso}</b>.`,
+              mensaje: `¡Felicidades! Te has inscrito correctamente en ${curso.titulo_curso}.`,
               tipo: "success",
               boton: "Continuar"
             });

@@ -24,8 +24,21 @@ class InscripcionesController:
         # Intentar inscripción
         exito = self.inscripciones.inscribir_usuario(id_usuario, id_curso)
         if exito:
-            print("Inscripción realizada con éxito.")
             return {"exito": True, "mensaje": "Inscripción exitosa"}
         else:
-            print("Error durante el proceso de inscripción.")
             return {"exito": False, "mensaje": "Error al inscribirse en el curso"}
+
+    def listar_por_usuario(self, id_usuario):
+        """Obtiene todas las inscripciones de un usuario."""
+        print(f"Obteniendo inscripciones del usuario {id_usuario}...")
+        try:
+            datos = self.inscripciones.listar_por_usuario(id_usuario)
+            if datos:
+                print(f"Se encontraron {len(datos)} inscripciones para el usuario {id_usuario}.")
+                return {"exito": True, "data": datos}
+            else:
+                print(f"El usuario {id_usuario} no tiene inscripciones registradas.")
+                return {"exito": True, "data": [], "mensaje": "El usuario no tiene inscripciones"}
+        except Exception as e:
+            print(f"Error al listar inscripciones del usuario {id_usuario}: {e}")
+            return {"exito": False, "mensaje": "Error al obtener las inscripciones del usuario"}

@@ -2,9 +2,11 @@ export const SessionManager = {
   // Guarda los datos del usuario en la sesión
   guardarUsuario(usuario) {
     sessionStorage.setItem("usuarioLogueado", "true");
-    sessionStorage.setItem("id_usuario", usuario.id_usuario);
+    sessionStorage.setItem("id_usuario", usuario.id_usuario || usuario.id);
     sessionStorage.setItem("usuarioNombre", usuario.nombre);
     sessionStorage.setItem("usuarioRol", usuario.rol);
+
+    sessionStorage.setItem("usuario", JSON.stringify(usuario));
   },
 
   // Obtiene el usuario actual
