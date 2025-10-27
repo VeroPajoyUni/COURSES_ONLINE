@@ -5,12 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Iniciar Sesión - OpenMind</title>
-  <link rel="stylesheet" href="../styles/css/login.css" />
+  <link rel="stylesheet" href="../styles/css/auth.css" />
 </head>
 
 <body>
-  <div class="login-container">
-    <div class="login-box">
+  <div class="auth-container">
+    <div class="auth-box">
       <div class="logo">
         <h1>OpenMind</h1>
         <p class="slogan">El conocimiento abre tu mente</p>
@@ -18,32 +18,39 @@
 
       <h2>Iniciar Sesión</h2>
 
-      <form id="login-form">
+      <form id="login-form" novalidate>
         <div class="form-group">
           <label for="correo">Correo electrónico</label>
-          <input 
-            type="email" 
-            id="correo" 
-            name="correo" 
+          <input
+            type="email"
+            id="correo"
+            name="correo"
             placeholder="ejemplo@correo.com"
-            required 
+            required
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group password-group">
           <label for="contrasenia">Contraseña</label>
-          <input 
-            type="password" 
-            id="contrasenia" 
-            name="contrasenia" 
-            placeholder="••••••••"
-            required 
-          />
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="contrasenia"
+              name="contrasenia"
+              placeholder="••••••••"
+              required
+            />
+            <span id="togglePassword" class="toggle-password" title="Mostrar/Ocultar contraseña">👁️</span>
+          </div>
         </div>
 
         <div id="mensaje-error" class="mensaje-error" style="display: none;"></div>
 
-        <button type="submit" class="btn-login">Iniciar Sesión</button>
+        <button type="submit" class="btn-auth">Iniciar Sesión</button>
+
+        <div class="form-footer">
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
       </form>
 
       <div class="form-footer">
@@ -53,6 +60,7 @@
     </div>
   </div>
 
+  <script type="module" src="../controllers/sessionManager.js"></script>
   <script type="module" src="../controllers/authController.js"></script>
 </body>
 

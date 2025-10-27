@@ -17,12 +17,8 @@ export async function mostrarCursos() {
       </div>
       <h3>${curso.titulo_curso}</h3>
       <p class="descripcion">${curso.descripcion_curso}</p>
-      <p class="instructor"><strong>Instructor:</strong> ${curso.instructor}</p>
       <div class="card-footer">
-        <span class="fechas">
-          ${formatearFecha(curso.fecha_inicio)} - ${formatearFecha(curso.fecha_fin)}
-        </span>
-        <a href="./cursoDetalle.html?id=${curso.id_curso}" class="btn-ver-mas">Ver más</a>
+        <a href="./cursoDetalle.html?id=${curso.id_curso}" class="btn-all">Ver más</a>
       </div>
     </div>
   `).join("");

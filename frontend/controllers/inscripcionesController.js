@@ -1,13 +1,16 @@
-// frontend/controllers/inscripcionController.js
 import { inscribirCurso, obtenerInscripcionesUsuario } from "../assets/js/api.js";
 import { mostrarModal } from "./modalAlertsController.js";
+import { SessionManager } from "../controllers/sessionManager.js";
 
 /**
- * Maneja todo el proceso de inscripción con las validaciones especificadas.
+ * Manejo de las validaciones del proceso de inscripción a un curso
  */
-export async function manejarInscripcion(id_usuario, id_curso, curso_finalizado) {
+export async function manejarInscripcion(id_curso, curso_finalizado) {
+  // Obtener usuario desde SessionManager
+  const usuario = SessionManager.obtenerUsuario();
+
   // Validar si el usuario está logueado
-  if (!id_usuario) {
+  if (!usuario || !usuario.id_usuario) {
     mostrarModal({
       titulo: "Debes iniciar sesión",
       mensaje: "Debes iniciar sesión para inscribirte en este curso.",
@@ -16,6 +19,8 @@ export async function manejarInscripcion(id_usuario, id_curso, curso_finalizado)
     });
     return;
   }
+
+  const id_usuario = usuario.id_usuario;
 
   // Validar si el curso ya finalizó
   if (curso_finalizado) {
@@ -68,11 +73,11 @@ export async function manejarInscripcion(id_usuario, id_curso, curso_finalizado)
     boton.classList.replace("btn-primary", "btn-success");
     boton.disabled = true;
 
-    // Guardar en “Mis cursos” (localStorage temporal)
-    const misCursos = JSON.parse(localStorage.getItem("misCursos")) || [];
+    // Guardar en “Mis cursos” dentro de la sesión
+    let misCursos = SessionManager.obtenerDatos("misCursos") || [];
     if (!misCursos.includes(id_curso)) {
       misCursos.push(id_curso);
-      localStorage.setItem("misCursos", JSON.stringify(misCursos));
+      SessionManager.guardarDatos("misCursos", misCursos);
     }
 
   } else {
