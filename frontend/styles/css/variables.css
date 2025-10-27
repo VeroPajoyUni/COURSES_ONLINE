@@ -4,6 +4,7 @@
   --color-secundario: #000000;
   --color-acento: #272727;
   --color-acento2: #e4e4e4;
+  --color-acento3: #9fbad3;
   --color-fondo: #f9fafb;
   --color-texto: #1f2937;
   --color-blanco: #ffffff;
@@ -17,6 +18,6 @@
   /* ⚙️ Estilo general */
   --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
   --radio-borde: 14px;
-  --transicion: all 0.3s ease;
+  --transicion: transform 0.2s, box-shadow 0.2s;
   --fuente: 'Poppins', 'Segoe UI', sans-serif;
 }

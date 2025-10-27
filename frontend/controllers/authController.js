@@ -1,44 +1,59 @@
 import { login } from "../assets/js/api.js";
+import { SessionManager } from "../controllers/sessionManager.js";
 
-// Manejar el envío del formulario de login
+// Validaciones regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&¿?¡.+*])[A-Za-z\d!@#$%&¿?¡.+*]{8,15}$/;
+
+// Mostrar/ocultar contraseña
+const togglePassword = document.getElementById("togglePassword");
+const inputPassword = document.getElementById("contrasenia");
+if (togglePassword && inputPassword) {
+  togglePassword.addEventListener("click", () => {
+    const type = inputPassword.type === "password" ? "text" : "password";
+    inputPassword.type = type;
+    togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+  });
+}
+
+// Manejar el envío del formulario
 document.getElementById("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const correo = document.getElementById("correo").value.trim();
-  const contrasenia = document.getElementById("contrasenia").value;
+  const contrasenia = document.getElementById("contrasenia").value.trim();
   const mensajeError = document.getElementById("mensaje-error");
-
-  // Ocultar mensaje de error previo
   mensajeError.style.display = "none";
 
-  // Validación básica
+  // Validaciones
   if (!correo || !contrasenia) {
     mostrarError("Por favor, completa todos los campos");
     return;
   }
 
-  // Intentar login
+  if (!emailRegex.test(correo)) {
+    mostrarError("Formato de correo electrónico no válido");
+    return;
+  }
+
+  if (!passwordRegex.test(contrasenia)) {
+    mostrarError("La contraseña no cumple con los requisitos de seguridad");
+    return;
+  }
+
+  // Intentar login con API
   const respuesta = await login(correo, contrasenia);
 
   if (respuesta.exito) {
     const usuario = respuesta.usuario;
 
-    // Guardar datos del usuario en sessionStorage
-    sessionStorage.setItem("usuarioLogueado", "true");
-    sessionStorage.setItem("usuarioId", usuario.id_usuario);
-    sessionStorage.setItem("usuarioNombre", usuario.nombre_usuario);
-    sessionStorage.setItem("usuarioRol", usuario.rol);
+    SessionManager.guardarUsuario(usuario);
 
-    // Redirigir según el rol del usuario
-    const rol = usuario.rol.toLowerCase();
-
-    if (rol === "Usuario") {
-      window.location.href = "./index.html";
-    } else if (rol === "Instructor") {
-      window.location.href = "./index.html"; // Más tarde será dashboard de instructor
-    }
+    alert("Inicio de sesión exitoso");
+    window.location.href = "./index.html";
   } else {
-    mostrarError(respuesta.mensaje);
+    mostrarError("Credenciales incorrectas, intenta nuevamente.");
   }
 });
 

@@ -1,0 +1,39 @@
+.btn-all {
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-all:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-all:active {
+  transform: translateY(0);
+}
+
+.logout-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  background-image: url("../../assets/img/icons/cerrar-sesion.png");
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.logout-icon:hover {
+  transform: scale(1.1);
+  opacity: 0.85;
+}

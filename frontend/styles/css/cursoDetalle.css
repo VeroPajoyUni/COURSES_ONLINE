@@ -62,7 +62,7 @@
 
 .categoria-tag {
   display: inline-block;
-  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+  background: linear-gradient(135deg, var(--color-acento) 0%, var(--color-acento2) 100%);
   color: var(--color-blanco);
   padding: 8px 18px;
   border-radius: 20px;
@@ -160,30 +160,29 @@
 .btn-inscribirse,
 .btn-compartir,
 .btn-volver-cursos {
-  padding: 16px 26px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+  color: var(--color-blanco);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transicion);
 }
 
-.btn-inscribirse {
-  background: var(--color-primario);
-  color: white;
-}
-
 .btn-compartir {
   background: white;
   color: var(--color-primario);
-  border: 2px solid var(--color-primario);
+  border: 1px solid var(--color-primario);
 }
 
 .btn-volver-cursos {
   background: transparent;
   color: var(--color-primario);
-  border: 2px solid var(--color-primario);
+  text-align: center;
+  border: 0.5px solid var(--color-primario);
 }
 
 .btn-inscribirse:hover,

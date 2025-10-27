@@ -5,6 +5,7 @@ import re
 from datetime import date, datetime
 from controllers.cursos_controller import CursosController
 from controllers.auth_controller import AuthController
+from controllers.inscripciones_controller import InscripcionesController
 
 class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
@@ -35,9 +36,17 @@ class ServidorBasico(BaseHTTPRequestHandler):
             else:
                 self._enviar_respuesta(404, {"mensaje": "Curso no encontrado"})
         
+        elif re.match(r"^/api/inscripciones/usuario/\d+$", ruta):
+            id_usuario = int(ruta.split("/")[-1])
+            inscripciones = InscripcionesController().listar_por_usuario(id_usuario)
+            self._enviar_respuesta(200, inscripciones)
+
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
+    # ==============================
+    #         PETICIONES POST
+    # ==============================
     def do_POST(self):
         ruta = urlparse(self.path).path
         
@@ -66,10 +75,24 @@ class ServidorBasico(BaseHTTPRequestHandler):
             
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
+
+        elif ruta == "/api/inscripciones":
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+
+            # print("DEBUG VERO:", id_usuario, id_curso)  # 👈 agrega esto
+            respuesta = InscripcionesController().inscribir(id_usuario, id_curso)
+            # print("RESPUESTA VERO:", respuesta)  # 👈 y esto
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
         
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
+    # ==============================
+    #         OPCIONES CORS
+    # ==============================
+    # Para manejar las peticiones del navegador relacionadas con CORS
     def do_OPTIONS(self):
         """Maneja las peticiones OPTIONS para CORS"""
         self.send_response(200)

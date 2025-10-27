@@ -10,31 +10,81 @@
 </head>
 
 <body>
-  <!-- Contenedores para header y footer modularizados -->
+  <!-- HEADER dinámico -->
   <div id="header-container"></div>
 
   <main class="main-content">
+    <!-- Estado de carga -->
     <section id="loading" class="loading">
       <p>Cargando curso...</p>
     </section>
 
+    <!-- Estado de error -->
     <section id="error" class="error" style="display: none">
       <p>No se pudo cargar el curso.</p>
-      <a href="./index.html" class="btn-volver">Volver a cursos</a>
+      <a href="./index.html" class="btn-all">Volver a cursos</a>
     </section>
 
+    <!-- Contenedor del curso -->
     <section id="cursoDetalle" class="cursoDetalle" style="display: none">
-      <!-- El contenido del curso se cargará dinámicamente -->
+      <!-- Aquí se llenará la información dinámica del curso -->
+      <div class="curso-header">
+        <div class="breadcrumb">
+          <a href="./index.html">Cursos</a> / <span id="tituloCurso"></span>
+        </div>
+        <h1 id="tituloCursoHeader"></h1>
+        <p id="categoriaCurso" class="categoria-tag"></p>
+        <p id="descripcionCurso" class="descripcion"></p>
+      </div>
+
+      <div class="curso-info-grid">
+        <div class="info-card">
+          <h3>👨‍🏫 Instructor</h3>
+          <p id="instructorCurso"></p>
+        </div>
+        <div class="info-card">
+          <h3>📅 Duración</h3>
+          <p id="duracionCurso"></p>
+        </div>
+        <div class="info-card">
+          <h3>👥 Estudiantes</h3>
+          <p id="totalEstudiantes"></p>
+        </div>
+        <div class="info-card">
+          <h3>📚 Lecciones</h3>
+          <p id="totalLecciones"></p>
+        </div>
+      </div>
+
+      <div class="curso-contenido">
+        <div class="lecciones-section">
+          <h2>Contenido del curso</h2>
+          <div id="listaLecciones"></div>
+        </div>
+
+        <div class="acciones-section">
+          <button class="btn-inscribirse">Inscribirme al curso</button>
+          <button class="btn-compartir">Compartir curso</button>
+          <a href="./index.html" class="btn-volver-cursos">Volver a cursos</a>
+        </div>
+      </div>
+
+      <div class="categoria-info">
+        <h3>Sobre la categoría: <span id="nombreCategoria"></span></h3>
+        <p id="descripcionCategoria"></p>
+      </div>
     </section>
   </main>
 
+  <!-- FOOTER dinámico -->
   <div id="footer-container"></div>
 
   <script type="module">
     import { loadHeaderFooter } from "../controllers/loadComponents.js";
     loadHeaderFooter();
   </script>
-
+  
+  <script type="module" src="../controllers/sessionManager.js"></script>
   <script type="module" src="../controllers/cursoDetalleController.js"></script>
 </body>
 
