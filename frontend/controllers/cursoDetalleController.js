@@ -117,7 +117,6 @@ async function cargarDetalleCurso() {
         return;
       }
 
-          tipo: "warning",
       const respInscripciones = await obtenerInscripcionesUsuario(usuario.id_usuario);
       if (respInscripciones.exito) {
         const yaInscrito = respInscripciones.data.some(ins => ins.id_curso === parseInt(idCurso));
