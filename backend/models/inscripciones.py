@@ -35,8 +35,8 @@ class Inscripciones:
         """Inserta una nueva inscripción si todo está correcto."""
         id_estado_inscrito = self.obtener_id_estado("Inscrito")
         if not id_estado_inscrito:
-            print("⚠️ Error: No existe el estado 'Inscrito' en la tabla estados.")
-            return False
+            print("Error: No existe el estado 'Inscrito' en la tabla estados.")
+            return {"exito": False, "mensaje": "Estado 'Inscrito' no encontrado"}
 
         consulta = """
             INSERT INTO inscripciones (fecha_inscripcion, progreso, id_usuario, id_curso, id_estado)
@@ -44,11 +44,11 @@ class Inscripciones:
         """
         try:
             self.db.ejecutar(consulta, (id_usuario, id_curso, id_estado_inscrito))
-            self.db.confirmar()  # ✅ asegura que se guarde en la BD
-            return True
+            self.db.confirmar()
+            return {"exito": True, "mensaje": "Inscripción exitosa"}
         except Exception as e:
-            print(f"❌ Error al inscribir usuario: {e}")
-            return False
+            print(f"Error al inscribir usuario: {e}")
+            return {"exito": False, "mensaje": f"Error al inscribirse: {e}"}
 
     def listar_por_usuario(self, id_usuario):
         """Devuelve todas las inscripciones asociadas a un usuario."""
