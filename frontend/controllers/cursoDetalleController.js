@@ -1,7 +1,10 @@
 import { getCursoDetalle, inscribirCurso, obtenerInscripcionesUsuario } from "../assets/js/api.js";
-import { mostrarModal } from "../controllers/modalAlertsController.js";
-import { SessionManager } from "../controllers/sessionManager.js";
+import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
+import { SessionManager } from "../controllers/utils/sessionManager.js";
 
+// ==========================
+// Cargar detalle de un curso
+// ==========================
 async function cargarDetalleCurso() {
   const urlParams = new URLSearchParams(window.location.search);
   const idCurso = urlParams.get("id");
@@ -18,19 +21,24 @@ async function cargarDetalleCurso() {
   }
 
   try {
-    const curso = await getCursoDetalle(idCurso);
+    const respuesta = await getCursoDetalle(idCurso);
+
     loading.style.display = "none";
 
-    if (!curso) {
+    // ==========================
+    // Manejo de la respuesta normalizada
+    // ==========================
+    if (!respuesta.exito) {
       error.style.display = "block";
-      error.querySelector("p").textContent = "No se pudo cargar el curso.";
+      error.querySelector("p").textContent = respuesta.mensaje || "No se pudo cargar el curso.";
       return;
     }
 
+    const curso = respuesta.data;
     contenedor.style.display = "block";
 
     // ==========================
-    // RELLENAR DATOS EN EL DOM
+    // Renderizar información del curso en el DOM
     // ==========================
     document.getElementById("tituloCurso").textContent = curso.titulo_curso;
     document.getElementById("tituloCursoHeader").textContent = curso.titulo_curso;
@@ -45,10 +53,10 @@ async function cargarDetalleCurso() {
     document.getElementById("descripcionCategoria").textContent = curso.descripcion_categoria;
 
     // ==========================
-    // LECCIONES
+    // Renderizar lecciones
     // ==========================
     const listaLecciones = document.getElementById("listaLecciones");
-    if (curso.lecciones.length > 0) {
+    if (curso.lecciones && curso.lecciones.length > 0) {
       listaLecciones.innerHTML = curso.lecciones
         .map(
           (leccion, index) => `
@@ -59,32 +67,33 @@ async function cargarDetalleCurso() {
               <p>${leccion.descripcion_leccion}</p>
             </div>
           </div>
-        `
-        )
-        .join("");
+        `).join("");
     } else {
       listaLecciones.innerHTML = `<p class="sin-lecciones">Este curso aún no tiene lecciones disponibles.</p>`;
     }
 
     // ==========================
-    // BOTÓN INSCRIBIRSE
+    // Botón inscribirse
     // ==========================
     const btnInscribirse = document.querySelector(".btn-inscribirse");
     const fechaActual = new Date();
     const fechaFinCurso = new Date(curso.fecha_fin);
-
     const usuario = SessionManager.obtenerUsuario();
 
+    // Verificar si ya está inscrito
     if (usuario && usuario.id_usuario) {
-      const inscripciones = await obtenerInscripcionesUsuario(usuario.id_usuario);
-      const yaInscrito = inscripciones.some(ins => ins.id_curso === parseInt(idCurso));
-      if (yaInscrito) {
-        btnInscribirse.textContent = "Inscrito";
-        btnInscribirse.disabled = true;
-        btnInscribirse.classList.add("inscrito");
+      const respInscripciones = await obtenerInscripcionesUsuario(usuario.id_usuario);
+      if (respInscripciones.exito) {
+        const yaInscrito = respInscripciones.data.some(ins => ins.id_curso === parseInt(idCurso));
+        if (yaInscrito) {
+          btnInscribirse.textContent = "Inscrito";
+          btnInscribirse.disabled = true;
+          btnInscribirse.classList.add("inscrito");
+        }
       }
     }
 
+    // Manejo de clic en inscribirse
     btnInscribirse.addEventListener("click", async () => {
       const usuario = SessionManager.obtenerUsuario();
 
@@ -108,17 +117,19 @@ async function cargarDetalleCurso() {
         return;
       }
 
-      const inscripciones = await obtenerInscripcionesUsuario(usuario.id_usuario);
-      const yaInscrito = inscripciones.some(ins => ins.id_curso === parseInt(idCurso));
-
-      if (yaInscrito) {
-        mostrarModal({
-          titulo: "Ya inscrito",
-          mensaje: "Ya estás inscrito en este curso.",
           tipo: "warning",
-          boton: "Aceptar"
-        });
-        return;
+      const respInscripciones = await obtenerInscripcionesUsuario(usuario.id_usuario);
+      if (respInscripciones.exito) {
+        const yaInscrito = respInscripciones.data.some(ins => ins.id_curso === parseInt(idCurso));
+        if (yaInscrito) {
+          mostrarModal({ 
+            titulo: "Ya inscrito", 
+            mensaje: "Ya estás inscrito en este curso.", 
+            tipo: "warning", 
+            boton: "Aceptar" 
+          });
+          return;
+        }
       }
 
       mostrarModal({
@@ -129,47 +140,37 @@ async function cargarDetalleCurso() {
       });
 
       const modalBtn = document.querySelector(".modal-btn");
-      modalBtn.addEventListener(
-        "click",
-        async () => {
-          const resultado = await inscribirCurso(usuario.id_usuario, idCurso);
+      modalBtn.addEventListener("click", async () => {
+        const resultado = await inscribirCurso(usuario.id_usuario, idCurso);
 
-          if (resultado.exito) {
-            mostrarModal({
-              titulo: "🎉 Inscripción exitosa",
-              mensaje: `¡Felicidades! Te has inscrito correctamente en ${curso.titulo_curso}.`,
-              tipo: "success",
-              boton: "Continuar"
-            });
-
-            btnInscribirse.textContent = "Inscrito";
-            btnInscribirse.disabled = true;
-            btnInscribirse.classList.add("inscrito");
-
-            agregarCursoAMisCursos(idCurso);
-          } else {
-            mostrarModal({
-              titulo: "Error en la inscripción",
-              mensaje: resultado.mensaje || "No se pudo completar la inscripción. Intenta nuevamente.",
-              tipo: "error",
-              boton: "Cerrar"
-            });
-          }
-        },
-        { once: true }
-      );
+        if (resultado.exito) {
+          mostrarModal({ 
+            titulo: "🎉 Inscripción exitosa", 
+            mensaje: `¡Felicidades! Te has inscrito correctamente en ${curso.titulo_curso}.`, 
+            tipo: "success", 
+            boton: "Continuar" 
+          });
+          btnInscribirse.textContent = "Inscrito";
+          btnInscribirse.disabled = true;
+          btnInscribirse.classList.add("inscrito");
+          agregarCursoAMisCursos(idCurso);
+        } else {
+          mostrarModal({ 
+            titulo: "Error en la inscripción", 
+            mensaje: resultado.mensaje || "No se pudo completar la inscripción. Intenta nuevamente.", 
+            tipo: "error", 
+            boton: "Cerrar" 
+          });
+        }
+      }, { once: true });
     });
 
     // ==========================
-    // BOTÓN COMPARTIR
+    // Botón compartir curso
     // ==========================
     document.querySelector(".btn-compartir").addEventListener("click", () => {
       if (navigator.share) {
-        navigator.share({
-          title: curso.titulo_curso,
-          text: curso.descripcion_curso,
-          url: window.location.href
-        });
+        navigator.share({ title: curso.titulo_curso, text: curso.descripcion_curso, url: window.location.href });
       } else {
         mostrarModal({
           titulo: "Compartir no disponible",
@@ -179,6 +180,7 @@ async function cargarDetalleCurso() {
         });
       }
     });
+
   } catch (errorEx) {
     console.error("Error al cargar el curso:", errorEx);
     loading.style.display = "none";
@@ -188,7 +190,7 @@ async function cargarDetalleCurso() {
 }
 
 // ==========================
-// FUNCIONES AUXILIARES
+// Funciones auxiliares
 // ==========================
 function formatearFecha(fecha) {
   const date = new Date(fecha);
@@ -205,6 +207,6 @@ function agregarCursoAMisCursos(idCurso) {
 }
 
 // ==========================
-// INICIALIZACIÓN
+// Inicialización
 // ==========================
 window.addEventListener("DOMContentLoaded", cargarDetalleCurso);

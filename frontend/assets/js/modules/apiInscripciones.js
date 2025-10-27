@@ -1,45 +1,50 @@
-import { API_URL, fetchData } from "./apiConfig.js";
+import { API_URL, fetchJSON } from "../utils/apiConfig.js";
 
 /**
- * Inscribe a un usuario en un curso
+ * Función para inscribir un usuario en un curso.
+ * Envía id_usuario e id_curso al backend mediante POST.
+ * Retorna la respuesta con estructura { exito, data, mensaje }.
  */
 export async function inscribirCurso(id_usuario, id_curso) {
-  const data = await fetchData(`${API_URL}/inscripciones`, {
+  const response = await fetchJSON(`${API_URL}/inscripciones`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id_usuario, id_curso }),
   });
 
-  console.log("Respuesta de inscripción:", data);
-  return data || { exito: false, mensaje: "No se pudo completar la inscripción" };
+  console.log("Respuesta de inscripción:", response);
+  return response;
 }
 
 /**
- * Obtiene todas las inscripciones de un usuario
+ * Obtiene todas las inscripciones de un usuario específico.
+ * Retorna { exito, data: [...inscripciones], mensaje }.
  */
 export async function obtenerInscripcionesUsuario(id_usuario) {
-  const data = await fetchData(`${API_URL}/inscripciones/usuario/${id_usuario}`);
-  console.log("Inscripciones del usuario:", data);
-  return Array.isArray(data) ? data : [];
+  const response = await fetchJSON(`${API_URL}/inscripciones/usuario/${id_usuario}`);
+  console.log("Inscripciones del usuario:", response);
+  return response;
 }
 
 /**
- * Obtiene el detalle de una inscripción específica
+ * Obtiene el detalle de una inscripción específica usando su id.
+ * Retorna { exito, data: {...inscripcion}, mensaje }.
  */
 export async function obtenerDetalleInscripcion(id_inscripcion) {
-  const data = await fetchData(`${API_URL}/inscripciones/${id_inscripcion}`);
-  console.log("Detalle de la inscripción obtenido:", data);
-  return data || null;
+  const response = await fetchJSON(`${API_URL}/inscripciones/${id_inscripcion}`);
+  console.log("Detalle de la inscripción obtenido:", response);
+  return response;
 }
 
 /**
- * Cancela una inscripción
+ * Cancela una inscripción específica usando su id.
+ * Retorna { exito, data, mensaje }.
  */
 export async function cancelarInscripcion(id_inscripcion) {
-  const data = await fetchData(`${API_URL}/inscripciones/${id_inscripcion}`, {
+  const response = await fetchJSON(`${API_URL}/inscripciones/${id_inscripcion}`, {
     method: "DELETE",
   });
 
-  console.log("Respuesta de cancelación:", data);
-  return data || { exito: false, mensaje: "No se pudo cancelar la inscripción" };
+  console.log("Respuesta de cancelación:", response);
+  return response;
 }

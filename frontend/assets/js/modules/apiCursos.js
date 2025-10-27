@@ -1,13 +1,13 @@
-import { API_URL, fetchData } from "./apiConfig.js";
+import { API_URL, fetchJSON } from "../utils/apiConfig.js";
 
 export async function getCursos() {
-  const data = await fetchData(`${API_URL}/cursos`);
-  console.log("Cursos obtenidos:", data);
-  return Array.isArray(data) ? data : [];
+  const response = await fetchJSON(`${API_URL}/cursos`);
+  console.log("Cursos obtenidos:", response);
+  return response;
 }
 
 export async function getCursoDetalle(id_curso) {
-  const data = await fetchData(`${API_URL}/cursos/${id_curso}`);
-  console.log("Detalle del curso obtenido:", data);
-  return data || null;
+  const response = await fetchJSON(`${API_URL}/cursos/${id_curso}`);
+  console.log("Detalle del curso obtenido:", response);
+  return response;
 }
