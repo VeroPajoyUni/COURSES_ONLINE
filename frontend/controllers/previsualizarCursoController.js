@@ -1,17 +1,17 @@
 import { getCursoDetalle, inscribirCurso, obtenerInscripcionesUsuario } from "../assets/js/api.js";
-import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
-import { SessionManager } from "../controllers/utils/sessionManager.js";
+import { mostrarModal } from "./utils/modalAlertsController.js";
+import { SessionManager } from "./utils/sessionManager.js";
 
 // ==========================
-// Cargar detalle de un curso
+// Cargar previsualización de un curso
 // ==========================
-async function cargarDetalleCurso() {
+async function cargarPrevisualizarCurso() {
   const urlParams = new URLSearchParams(window.location.search);
   const idCurso = urlParams.get("id");
 
   const loading = document.getElementById("loading");
   const error = document.getElementById("error");
-  const contenedor = document.getElementById("cursoDetalle");
+  const contenedor = document.getElementById("previsualizarCurso");
 
   if (!idCurso) {
     loading.style.display = "none";
@@ -208,4 +208,4 @@ function agregarCursoAMisCursos(idCurso) {
 // ==========================
 // Inicialización
 // ==========================
-window.addEventListener("DOMContentLoaded", cargarDetalleCurso);
+window.addEventListener("DOMContentLoaded", cargarPrevisualizarCurso);
