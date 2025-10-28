@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Cursos - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/main.css">
+  <link rel="stylesheet" href="../styles/css/misCursos.css">
+</head>
+<body>
+  <!-- HEADER dinámico -->
+  <div id="header-container"></div>
+
+  <main>
+    <h1>Mis cursos</h1>
+    <section id="mis-cursos-container" class="cursos-lista"></section>
+  </main>
+  
+  <!-- FOOTER dinámico -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    import { mostrarMisCursos } from "../controllers/misCursosController.js";
+
+    // Cargar header y footer
+    loadHeaderFooter();
+
+    // Mostrar cursos del usuario
+    mostrarMisCursos();
+  </script>
+</body>
+</html>

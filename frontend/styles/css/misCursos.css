@@ -1,0 +1,115 @@
+@import "./variables.css";
+@import "./base.css";
+@import "./cards.css";
+
+/* =============================
+   Contenedor principal de Mis Cursos
+   ============================= */
+main h1 {
+  text-align: center;
+  color: var(--color-primario);
+  margin: 2rem 0 1rem;
+  font-size: 2rem;
+}
+
+#mis-cursos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* =============================
+   Tarjetas de cursos
+   ============================= */
+.card {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transicion);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+  transition: var(--transicion);
+}
+
+.card:hover::before {
+  left: 0;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+  color: var(--color-primario);
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--color-gris);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* =============================
+   Botones de acción
+   ============================= */
+.card a.btn-continuar,
+.card button.btn-certificado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radio-borde);
+  transition: var(--transicion);
+  cursor: pointer;
+  border: none;
+}
+
+.card a.btn-continuar:hover,
+.card button.btn-certificado:hover {
+  background-color: var(--color-secundario);
+  transform: scale(1.05);
+}
+
+/* Icono certificado más grande */
+.card button.btn-certificado {
+  font-size: 1.3rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+/* =============================
+   Mensaje cuando no hay cursos
+   ============================= */
+.no-cursos {
+  text-align: center;
+  color: var(--color-gris);
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}

@@ -1,15 +1,16 @@
 import { inscribirCurso, obtenerInscripcionesUsuario } from "../assets/js/api.js";
-import { mostrarModal } from "./modalAlertsController.js";
-import { SessionManager } from "../controllers/sessionManager.js";
+import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
+import { SessionManager } from "../controllers/utils/sessionManager.js";
 
 /**
- * Manejo de las validaciones del proceso de inscripción a un curso
+ * Maneja todo el proceso de inscripción de un usuario a un curso
+ * @param {number} id_curso - ID del curso al que se desea inscribir
+ * @param {boolean} curso_finalizado - Indica si el curso ya ha terminado
  */
 export async function manejarInscripcion(id_curso, curso_finalizado) {
-  // Obtener usuario desde SessionManager
   const usuario = SessionManager.obtenerUsuario();
 
-  // Validar si el usuario está logueado
+  // Verifica si el usuario está logueado
   if (!usuario || !usuario.id_usuario) {
     mostrarModal({
       titulo: "Debes iniciar sesión",
@@ -22,7 +23,7 @@ export async function manejarInscripcion(id_curso, curso_finalizado) {
 
   const id_usuario = usuario.id_usuario;
 
-  // Validar si el curso ya finalizó
+  // Si el curso ya finalizó, no permite la inscripción
   if (curso_finalizado) {
     mostrarModal({
       titulo: "Curso finalizado",
@@ -33,7 +34,7 @@ export async function manejarInscripcion(id_curso, curso_finalizado) {
     return;
   }
 
-  // Confirmación antes de inscribirse
+  // Confirmar con el usuario antes de inscribirse
   const confirmar = confirm("¿Deseas inscribirte en este curso?");
   if (!confirmar) return;
 
@@ -41,10 +42,25 @@ export async function manejarInscripcion(id_curso, curso_finalizado) {
   boton.disabled = true;
   boton.textContent = "Procesando...";
 
-  // Validar si ya está inscrito
-  const inscripciones = await obtenerInscripcionesUsuario(id_usuario);
+  // Obtiene las inscripciones del usuario
+  const respuestaInscripciones = await obtenerInscripcionesUsuario(id_usuario);
+
+  if (!respuestaInscripciones.exito) {
+    mostrarModal({
+      titulo: "Error al cargar inscripciones",
+      mensaje: respuestaInscripciones.mensaje || "No se pudieron obtener tus inscripciones.",
+      tipo: "error",
+      boton: "Cerrar"
+    });
+    boton.disabled = false;
+    boton.textContent = "Inscribirme al curso";
+    return;
+  }
+
+  const inscripciones = respuestaInscripciones.data;
   const yaInscrito = inscripciones.some(ins => ins.id_curso === Number(id_curso));
 
+  // Si ya está inscrito, muestra aviso
   if (yaInscrito) {
     mostrarModal({
       titulo: "Ya estás inscrito",
@@ -58,7 +74,7 @@ export async function manejarInscripcion(id_curso, curso_finalizado) {
     return;
   }
 
-  // Procesar la inscripción
+  // Llama al endpoint de inscripción
   const respuesta = await inscribirCurso(id_usuario, id_curso);
 
   if (respuesta.exito) {
@@ -69,11 +85,12 @@ export async function manejarInscripcion(id_curso, curso_finalizado) {
       boton: "Aceptar"
     });
 
+    // Actualiza el botón visualmente
     boton.textContent = "Inscrito";
     boton.classList.replace("btn-primary", "btn-success");
     boton.disabled = true;
 
-    // Guardar en “Mis cursos” dentro de la sesión
+    // Guarda el curso en “Mis cursos” de la sesión
     let misCursos = SessionManager.obtenerDatos("misCursos") || [];
     if (!misCursos.includes(id_curso)) {
       misCursos.push(id_curso);
