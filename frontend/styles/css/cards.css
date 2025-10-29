@@ -11,14 +11,14 @@
   border-radius: var(--radio-borde);
   box-shadow: var(--sombra);
   padding: 1.5rem;
-  margin: 1.2rem;
-  transition: var(--transicion);
+  width: 320px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 340px;
+  transition: var(--transicion);
   position: relative;
   overflow: hidden;
+  margin: 1.2rem;
 }
 
 .card::before {
@@ -43,14 +43,14 @@
 
 .card h3 {
   color: var(--color-primario);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
 }
 
 .card p {
   color: var(--color-gris);
   font-size: 0.95rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
 }
 
 .card button {

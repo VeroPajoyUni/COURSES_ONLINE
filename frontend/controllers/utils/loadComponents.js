@@ -38,19 +38,35 @@ function actualizarHeaderSegunSesion() {
   const nav = document.querySelector(".main-nav ul");
   if (!nav) return;
 
-  // Enlaces comunes a todos los usuarios
+  // ==========================================
+  // Enlaces base del menú
+  // ==========================================
   nav.innerHTML = `
     <li><a href="index.html">Inicio</a></li>
-    <li><a href="cursoDetalle.html">Cursos</a></li>
-    <li><a href="certificate.html">Certificados</a></li>
   `;
 
-  // Usuario logueado
-  if (usuario) {
-    // Agregar enlace de "Mis Cursos"
-    nav.innerHTML += `<li><a href="misCursos.html">Mis cursos</a></li>`;
+  // Verificación del rol para adaptar el menú
+  if (usuario && usuario.rol?.toLowerCase() === "instructor") {
+    // Si es Instructor, mostrar "Gestión de Cursos"
+    nav.innerHTML += `<li><a href="gestionCursos.html">Gestión de Cursos</a></li>`;
+  } else {
+    // Para cualquier otro rol o visitante, mostrar "Cursos"
+    nav.innerHTML += `<li><a href="index.html">Cursos</a></li>`;
+  }
 
-    // Mostrar saludo personalizado
+  // // Enlace común
+  // nav.innerHTML += `<li><a href="#">Certificados</a></li>`;
+
+  // ==========================================
+  // Usuario logueado
+  // ==========================================
+  if (usuario) {
+    // Mostrar enlace de "Mis Cursos" si no es instructor
+    if (usuario.rol?.toLowerCase() !== "instructor") {
+      nav.innerHTML += `<li><a href="misCursos.html">Mis cursos</a></li>`;
+    }
+
+    // Saludo personalizado
     const nombreLi = document.createElement("li");
     nombreLi.innerHTML = `<span class="user-greeting">Hola, ${usuario.nombre}!</span>`;
 
@@ -69,7 +85,9 @@ function actualizarHeaderSegunSesion() {
       .getElementById("logout-icon")
       .addEventListener("click", () => SessionManager.cerrarSesion());
   } else {
-    // Usuario no logueado: mostrar opciones de login/registro
+    // ==========================================
+    // Usuario no logueado
+    // ==========================================
     nav.innerHTML += `
       <li><a href="login.html">Iniciar sesión</a></li>
       <li><a href="register.html">Registrarse</a></li>
