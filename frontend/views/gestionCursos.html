@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestión de cursos - OpenMind</title>
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="../styles/css/main.css" />
+  <link rel="stylesheet" href="../styles/css/gestionCursos.css" />
+</head>
+
+<body>
+  <div id="header-container"></div>
+
+  <main>
+    <section class="gestion-cursos-container">
+      <h2>Gestión de cursos</h2>
+
+      <!-- Barra de búsqueda y acción -->
+      <div class="barra-acciones">
+        <input 
+          id="buscarCurso" 
+          type="search" 
+          placeholder="Buscar por título o categoría" 
+          class="input-busqueda"
+        />
+        <button id="btnNuevoCurso" class="btn-agregar">+ Nuevo curso</button>
+      </div>
+
+      <!-- Tabla de cursos -->
+      <div class="tabla-contenedor">
+        <table id="tablaCursos" class="tabla-cursos">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Categoría</th>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th># Lecciones</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="tabla-vacia" style="display:none;">No se encontraron cursos.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Modal: Crear / Editar Curso -->
+  <div id="modalCurso" class="custom-modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="custom-modal modal-curso">
+      <h3 id="modalCursoTitulo">Nuevo curso</h3>
+      <form id="formCurso" class="form-curso">
+        <label for="cursoTitulo">Título</label>
+        <input id="cursoTitulo" name="titulo" type="text" required />
+
+        <label for="cursoDescripcion">Descripción</label>
+        <textarea 
+          id="cursoDescripcion" 
+          name="descripcion" 
+          minlength="30" 
+          maxlength="500" 
+          required>
+        </textarea>
+
+        <label for="cursoCategoria">Categoría</label>
+        <select id="cursoCategoria" name="categoria" required></select>
+
+        <div class="fechas-grid">
+          <div>
+            <label for="cursoInicio">Fecha inicio</label>
+            <input id="cursoInicio" type="date" name="fecha_inicio" required />
+          </div>
+          <div>
+            <label for="cursoFin">Fecha fin</label>
+            <input id="cursoFin" type="date" name="fecha_fin" required />
+          </div>
+        </div>
+
+        <label for="cursoEstado">Estado</label>
+        <select id="cursoEstado" name="estado">
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="button" id="btnCerrarModal" class="modal-btn">Cerrar</button>
+          <button type="submit" id="btnGuardarCurso" class="modal-btn" disabled>Guardar curso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmación personalizada -->
+  <div id="modalConfirm" class="custom-modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="custom-modal warning">
+      <h3>Confirmar acción</h3>
+      <p id="confirmMensaje">¿Seguro que deseas continuar?</p>
+      <div class="modal-actions">
+        <button id="confirmNo" class="modal-btn">Cancelar</button>
+        <button id="confirmSi" class="modal-btn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    await loadHeaderFooter();
+  </script>
+  <script type="module" src="../controllers/gestionCursosController.js"></script>
+</body>
+</html>

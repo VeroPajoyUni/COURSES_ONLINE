@@ -82,7 +82,7 @@ export async function mostrarMisCursos() {
             ${
               finalizado
                 ? `<button class="btn-certificado" title="Descargar certificado">📄</button>`
-                : `<a href="./cursoDetalle.html?id=${detalle.id_curso}" class="btn-continuar">Continuar el curso</a>`
+                : `<a href="./previsualizarCurso.html?id=${detalle.id_curso}" class="btn-continuar">Continuar el curso</a>`
             }
           </div>
         </div>

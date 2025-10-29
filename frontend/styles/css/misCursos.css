@@ -1,115 +1,259 @@
 @import "./variables.css";
 @import "./base.css";
-@import "./cards.css";
+@import "./botones.css";
+@import "./modal.css";
 
-/* =============================
-   Contenedor principal de Mis Cursos
-   ============================= */
-main h1 {
+/* ==========================================
+   🌐 GESTIÓN DE CURSOS – INTERFAZ INSTRUCTOR
+   ========================================== */
+
+body {
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  font-family: var(--fuente);
+}
+
+/* Contenedor principal */
+.gestion-cursos-container {
+  max-width: 1200px;
+  margin: 3rem auto;
+  background: var(--color-blanco);
+  padding: 2rem 2.5rem;
+  border-radius: var(--radio-borde);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
+.gestion-cursos-container h1 {
   text-align: center;
   color: var(--color-primario);
-  margin: 2rem 0 1rem;
-  font-size: 2rem;
-}
-
-#mis-cursos-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 1rem;
-}
-
-/* =============================
-   Tarjetas de cursos
-   ============================= */
-.card {
-  background-color: var(--color-blanco);
-  border-radius: var(--radio-borde);
-  box-shadow: var(--sombra);
-  padding: 1.5rem;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: var(--transicion);
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
   position: relative;
-  overflow: hidden;
 }
 
-.card::before {
+.gestion-cursos-container h1::after {
   content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+  width: 80px;
+  height: 3px;
+  background: var(--color-primario);
+  display: block;
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+/* ===========================
+   🔍 Barra de herramientas
+   =========================== */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtro-categorias label {
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.filtro-categorias select {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--color-acento2);
+  border-radius: 10px;
+  background-color: var(--color-blanco);
   transition: var(--transicion);
 }
 
-.card:hover::before {
-  left: 0;
+.filtro-categorias select:hover {
+  border-color: var(--color-primario);
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+.btn-agregar {
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  color: var(--color-blanco);
+  font-weight: 600;
+  padding: 0.8rem 1.3rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
-.card h3 {
-  color: var(--color-primario);
-  font-size: 1.4rem;
-  margin-bottom: 0.5rem;
+.btn-agregar:hover {
+  transform: scale(1.05);
+  background: var(--color-acento);
 }
 
-.card p {
-  color: var(--color-gris);
+/* ===========================
+   📋 Tabla de cursos
+   =========================== */
+.tabla-cursos {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.tabla-cursos thead {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+}
+
+.tabla-cursos th,
+.tabla-cursos td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
   font-size: 0.95rem;
-  margin-bottom: 1rem;
 }
 
-/* =============================
-   Botones de acción
-   ============================= */
-.card a.btn-continuar,
-.card button.btn-certificado {
+.tabla-cursos tr:hover {
+  background-color: #f3f4f6;
+  transition: 0.2s ease;
+}
+
+.tabla-vacia {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #999;
+}
+
+/* ===========================
+   ⚙️ Botones de acción
+   =========================== */
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.btn-accion {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
-  text-decoration: none;
-  font-size: 0.95rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radio-borde);
-  transition: var(--transicion);
-  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
   border: none;
+  color: var(--color-blanco);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.card a.btn-continuar:hover,
-.card button.btn-certificado:hover {
-  background-color: var(--color-secundario);
-  transform: scale(1.05);
+.btn-editar {
+  background-color: #fbbf24;
 }
 
-/* Icono certificado más grande */
-.card button.btn-certificado {
-  font-size: 1.3rem;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  padding: 0;
+.btn-eliminar {
+  background-color: #ef4444;
 }
 
-/* =============================
-   Mensaje cuando no hay cursos
-   ============================= */
-.no-cursos {
+.btn-gestionar {
+  background-color: #3b82f6;
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn-accion:hover,
+.btn-gestionar:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* ===========================
+   📄 Modal elegante
+   =========================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: var(--color-blanco);
+  padding: 2rem;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 500px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h2 {
   text-align: center;
-  color: var(--color-gris);
-  font-size: 1.2rem;
-  margin: 2rem 0;
+  color: var(--color-primario);
+  margin-bottom: 1rem;
+}
+
+.form-curso {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-curso input,
+.form-curso textarea,
+.form-curso select {
+  border: 1.8px solid #ddd;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.form-curso input:focus,
+.form-curso textarea:focus,
+.form-curso select:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* ===========================
+   📱 Responsividad
+   =========================== */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .tabla-cursos th,
+  .tabla-cursos td {
+    font-size: 0.85rem;
+  }
+
+  .btn-accion {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
 }

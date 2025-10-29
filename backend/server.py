@@ -6,7 +6,7 @@ from datetime import date, datetime
 from controllers.cursos_controller import CursosController
 from controllers.auth_controller import AuthController
 from controllers.inscripciones_controller import InscripcionesController
-
+from controllers.categorias_controller import CategoriasController
 
 class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
@@ -41,6 +41,10 @@ class ServidorBasico(BaseHTTPRequestHandler):
             print(f"Consultando inscripciones para usuario {id_usuario}")
             inscripciones = InscripcionesController().listar_por_usuario(id_usuario)
             self._enviar_respuesta(200, inscripciones)
+
+        elif ruta == "/api/categorias":
+            categorias = CategoriasController().listar_categorias()
+            self._enviar_respuesta(200, categorias)
 
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
