@@ -1,12 +1,12 @@
 import { SessionManager } from "./utils/sessionManager.js";
 import {
-  getCursos,
+  listarCursosInstructor,
   getCategorias,
   crearCurso,
   actualizarCurso,
   eliminarCurso,
-} from "../assets/js/modules/apiCursos.js";
-import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
+} from "../assets/js/api.js";
+import { mostrarModal, cerrarAlertas } from "./utils/modalAlertsController.js";
 
 // ================================
 // ELEMENTOS DEL DOM
@@ -14,7 +14,6 @@ import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
 const tablaBody = document.querySelector("#tablaCursos tbody");
 const btnNuevo = document.getElementById("btnNuevoCurso");
 const modal = document.getElementById("modalCurso");
-const modalContenido = document.querySelector(".modal-contenido");
 const modalTitulo = document.getElementById("modalCursoTitulo");
 const form = document.getElementById("formCurso");
 const btnGuardar = document.getElementById("btnGuardarCurso");
@@ -34,6 +33,7 @@ let onConfirmAction = null;
 // ================================
 async function init() {
   const usuario = SessionManager.obtenerUsuario();
+
   if (!usuario || usuario.rol?.toLowerCase() !== "instructor") {
     document.querySelector(".gestion-cursos-container").innerHTML =
       "<p class='no-cursos'>⚠️ Acceso no autorizado. Debes iniciar sesión como <b>Instructor</b>.</p>";
@@ -41,7 +41,7 @@ async function init() {
   }
 
   await cargarCategorias();
-  await cargarCursos();
+  await cargarCursos(usuario.id_usuario);
   agregarEventos();
 }
 
@@ -51,6 +51,7 @@ async function init() {
 async function cargarCategorias() {
   const select = document.getElementById("cursoCategoria");
   const resp = await getCategorias();
+
   if (resp.exito && Array.isArray(resp.data)) {
     select.innerHTML = resp.data
       .map((c) => `<option value="${c.id_categoria}">${c.nombre_categoria}</option>`)
@@ -58,21 +59,32 @@ async function cargarCategorias() {
   }
 }
 
-async function cargarCursos() {
-  const resp = await getCursos();
-  if (!resp.exito) {
+async function cargarCursos(id_instructor) {
+  try {
+    const resp = await listarCursosInstructor(`${id_instructor}?t=${Date.now()}`);
+
+    if (!resp?.exito) {
+      mostrarModal({
+        titulo: "Error",
+        mensaje: "No se pudieron cargar los cursos del instructor.",
+        tipo: "error",
+      });
+      return;
+    }
+
+    cursosCache = Array.isArray(resp.data)
+      ? resp.data.sort((a, b) => new Date(b.fecha_inicio) - new Date(a.fecha_inicio))
+      : [];
+
+    renderTabla(cursosCache);
+  } catch (err) {
+    console.error("Error cargando cursos:", err);
     mostrarModal({
       titulo: "Error",
-      mensaje: "No se pudieron cargar los cursos.",
+      mensaje: "Error al obtener los cursos desde el servidor.",
       tipo: "error",
     });
-    return;
   }
-
-  cursosCache = resp.data.sort(
-    (a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion)
-  );
-  renderTabla(cursosCache);
 }
 
 // ================================
@@ -91,33 +103,28 @@ function renderTabla(cursos) {
   tablaBody.innerHTML = cursos
     .map(
       (c) => `
-    <tr data-id="${c.id_curso}">
-      <td>${c.titulo_curso}</td>
-      <td>${c.nombre_categoria}</td>
-      <td>${formatDate(c.fecha_inicio)}</td>
-      <td>${formatDate(c.fecha_fin)}</td>
-      <td>${c.total_lecciones ?? c.num_lecciones ?? 0}</td>
-      <td>${c.estado ?? "Activo"}</td>
-      <td class="acciones">
-        <button class="btn-accion btn-editar">Editar</button>
-        <button class="btn-accion btn-eliminar">Eliminar</button>
-        <a class="btn-accion btn-gestionar" href="previsualizarCurso.html?id=${c.id_curso}">Lecciones</a>
-      </td>
-    </tr>`
+      <tr data-id="${c.id_curso}">
+        <td>${c.titulo_curso}</td>
+        <td>${c.nombre_categoria}</td>
+        <td>${c.fecha_inicio}</td>
+        <td>${c.fecha_fin}</td>
+        <td>${c.total_lecciones ?? c.num_lecciones ?? 0}</td>
+        <td>${c.estado ?? "Activo"}</td>
+        <td class="acciones">
+          <button class="btn-accion btn-editar">Editar</button>
+          <button class="btn-accion btn-eliminar">Eliminar</button>
+          <a class="btn-accion btn-gestionar" href="gestionLecciones.html?id=${c.id_curso}">Lecciones</a>
+        </td>
+      </tr>`
     )
     .join("");
-}
-
-function formatDate(d) {
-  if (!d) return "-";
-  return new Date(d).toLocaleDateString("es-ES");
 }
 
 // ================================
 // EVENTOS
 // ================================
 function agregarEventos() {
-  btnNuevo.addEventListener("click", () => abrirModalNuevo());
+  btnNuevo.addEventListener("click", abrirModalNuevo);
   btnCerrar.addEventListener("click", cerrarModal);
 
   form.addEventListener("input", validarFormulario);
@@ -127,32 +134,49 @@ function agregarEventos() {
   buscarInput.addEventListener("input", filtrarCursos);
 }
 
+// ================================
+// FORMULARIO
+// ================================
 async function manejarSubmit(e) {
   e.preventDefault();
   const data = obtenerDatosFormulario();
+  const usuario = SessionManager.obtenerUsuario();
 
-  const accion = editandoId ? actualizarCurso(editandoId, data) : crearCurso(data);
-  const mensaje = editandoId ? "actualizó" : "creó";
+  let resp;
+  const accion = editandoId ? "actualizado" : "creado";
 
-  const resp = await accion;
-  if (resp.exito) {
+  try {
+    if (editandoId) {
+      resp = await actualizarCurso(editandoId, data);
+    } else {
+      data.id_usuario = usuario.id_usuario;
+      resp = await crearCurso(data);
+    }
+
+    await new Promise((r) => setTimeout(r, 300)); // da tiempo al backend
+    await cargarCursos(usuario.id_usuario);
+
     mostrarModal({
-      titulo: "Éxito",
-      mensaje: `El curso se ${mensaje} correctamente.`,
+      titulo: "✅ Éxito",
+      mensaje: `Curso ${accion} correctamente.`,
       tipo: "success",
+      onClose: () => {
+        cerrarModal();
+      },
     });
-    await cargarCursos();
-  } else {
+  } catch (err) {
+    console.error("Error al guardar curso:", err);
     mostrarModal({
       titulo: "Error",
-      mensaje: resp.mensaje || "No se pudo completar la acción.",
+      mensaje: "Error inesperado al guardar el curso.",
       tipo: "error",
     });
   }
-
-  cerrarModal();
 }
 
+// ================================
+// TABLA: EDICIÓN Y ELIMINACIÓN
+// ================================
 async function manejarAccionesTabla(e) {
   const tr = e.target.closest("tr");
   if (!tr) return;
@@ -176,14 +200,17 @@ function filtrarCursos() {
 // MODALES
 // ================================
 function abrirModalNuevo() {
+  cerrarAlertas(); // evita overlays activos
   editandoId = null;
   modalTitulo.textContent = "🆕 Nuevo Curso";
   form.reset();
+  form.cursoDescripcion.value = "";
   btnGuardar.disabled = true;
   modal.style.display = "flex";
 }
 
 async function abrirModalEditar(id) {
+  cerrarAlertas(); // evita overlays activos
   const curso = cursosCache.find((c) => String(c.id_curso) === String(id));
   if (!curso) return;
 
@@ -194,15 +221,18 @@ async function abrirModalEditar(id) {
   form.cursoCategoria.value = curso.id_categoria;
   form.cursoInicio.value = curso.fecha_inicio?.split("T")[0] || "";
   form.cursoFin.value = curso.fecha_fin?.split("T")[0] || "";
-  form.cursoEstado.value = curso.estado || "activo";
   btnGuardar.disabled = false;
   modal.style.display = "flex";
 }
 
 function cerrarModal() {
   modal.style.display = "none";
+  cerrarAlertas(); // asegura limpieza total
 }
 
+// ================================
+// VALIDACIÓN
+// ================================
 function validarFormulario() {
   const titulo = form.cursoTitulo.value.trim();
   const descripcion = form.cursoDescripcion.value.trim();
@@ -223,8 +253,6 @@ function obtenerDatosFormulario() {
     id_categoria: parseInt(form.cursoCategoria.value, 10),
     fecha_inicio: form.cursoInicio.value,
     fecha_fin: form.cursoFin.value,
-    estado: form.cursoEstado.value,
-    id_usuario: SessionManager.obtenerUsuario().id_usuario,
   };
 }
 
@@ -233,21 +261,29 @@ function obtenerDatosFormulario() {
 // ================================
 function confirmarEliminar(id) {
   confirmMensaje.textContent =
-    "¿Seguro que deseas eliminar este curso? Esta acción no se puede deshacer.";
+    "¿Estás seguro de eliminar este curso? Esta acción no se puede deshacer.";
   modalConfirm.style.display = "flex";
+
   onConfirmAction = async () => {
     const resp = await eliminarCurso(id);
+    const usuario = SessionManager.obtenerUsuario();
+
     if (resp.exito) {
       mostrarModal({
-        titulo: "Curso eliminado",
-        mensaje: "El curso fue eliminado correctamente.",
+        titulo: "Éxito",
+        mensaje: "Curso eliminado exitosamente.",
         tipo: "success",
+        onClose: async () => {
+          await cargarCursos(usuario.id_usuario);
+        },
       });
-      await cargarCursos();
     } else {
       mostrarModal({
         titulo: "Error",
-        mensaje: resp.mensaje || "No se pudo eliminar el curso.",
+        mensaje:
+          resp.mensaje?.includes("usuarios inscritos")
+            ? "No se puede eliminar el curso porque tiene usuarios inscritos."
+            : resp.mensaje || "No se pudo eliminar el curso.",
         tipo: "error",
       });
     }

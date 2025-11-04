@@ -34,7 +34,7 @@ class Database:
     
     def confirmar(self):
         """Confirma (commit) los cambios en la base de datos."""
-        self.conn.commit()
+        self.connection.commit()
         
     def cerrar(self):
         self.cursor.close()

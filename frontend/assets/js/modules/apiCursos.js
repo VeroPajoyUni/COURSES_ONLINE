@@ -1,40 +1,75 @@
 import { API_URL, fetchJSON } from "../utils/apiConfig.js";
 
+/**
+ * Obtiene todos los cursos disponibles (vista pública o estudiante).
+ */
 export async function getCursos() {
-  const response = await fetchJSON(`${API_URL}/cursos`);
-  // console.log("Cursos obtenidos:", response);
-  return response;
+  return await fetchJSON(`${API_URL}/cursos`);
 }
 
+/**
+ * Obtiene el detalle de un curso por su ID.
+ */
 export async function getCursoDetalle(id_curso) {
-  const response = await fetchJSON(`${API_URL}/cursos/${id_curso}`);
-  // console.log("Detalle del curso obtenido:", response);
+  return await fetchJSON(`${API_URL}/cursos/${id_curso}`);
+}
+
+/**
+ * Obtiene todas las categorías de cursos disponibles.
+ */
+export async function getCategorias() {
+  return await fetchJSON(`${API_URL}/categorias`);
+}
+
+/**
+ * Obtiene los cursos creados por un instructor específico.
+ */
+export async function listarCursosInstructor(id_instructor) {
+  return await fetchJSON(`${API_URL}/gestion-cursos/${id_instructor}`);
+}
+
+/**
+ * Crea un nuevo curso.
+ */
+export async function crearCurso(payload) {
+  const response = await fetchJSON(`${API_URL}/cursos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Curso creado exitosamente.";
+
   return response;
 }
 
-export async function getCategorias(){
-  const response = await fetchJSON(`${API_URL}/categorias`);
-  console.log("Categorias obtenidas:", response);
+/**
+ * Actualiza un curso existente.
+ */
+export async function actualizarCurso(id, payload) {
+  const response = await fetchJSON(`${API_URL}/cursos/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Curso actualizado correctamente.";
+
   return response;
 }
 
-export async function crearCurso(payload){
-  return await fetchJSON(`${API_URL}/cursos`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
+/**
+ * Elimina un curso.
+ */
+export async function eliminarCurso(id) {
+  const response = await fetchJSON(`${API_URL}/cursos/${id}`, {
+    method: "DELETE",
   });
-}
 
-export async function actualizarCurso(id, payload){
-  return await fetchJSON(`${API_URL}/cursos/${id}`, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  });
-}
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Curso eliminado exitosamente.";
 
-export async function eliminarCurso(id){
-  const response = await fetchJSON(`${API_URL}/cursos/${id}`, { method: 'DELETE' });
   return response;
 }

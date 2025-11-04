@@ -9,6 +9,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
+  a {
+    text-decoration: none;
+    color: var(--color-blanco);
+  }
 }
 
 .btn-all:hover {
@@ -18,6 +22,12 @@
 
 .btn-all:active {
   transform: translateY(0);
+}
+
+.explorar-mas {
+  width: 80%;
+  background: linear-gradient(135deg, var(--color-acento) 0%, var(--color-acento2) 100%);
+  border-radius: 20px;
 }
 
 .logout-icon {
@@ -36,4 +46,46 @@
 .logout-icon:hover {
   transform: scale(1.1);
   opacity: 0.85;
+}
+
+/* ====== Botones de acciones ====== */
+.btn-inscribirse,
+.btn-compartir,
+.btn-volver-cursos {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.btn-compartir {
+  background: white;
+  color: var(--color-primario);
+  border: 1px solid var(--color-primario);
+}
+
+.btn-volver-cursos {
+  background: transparent;
+  color: var(--color-primario);
+  text-align: center;
+  border: 0.5px solid var(--color-primario);
+}
+
+.btn-inscribirse:hover,
+.btn-compartir:hover {
+  transform: scale(1.05);
+  background: var(--color-acento2);
+  color: var(--color-secundario);
+}
+
+.btn-volver-cursos:hover {
+  transform: scale(1.05);
+  background: var(--color-blanco);
+  color: var(--color-secundario);
 }

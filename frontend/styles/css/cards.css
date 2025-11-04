@@ -53,20 +53,24 @@
   margin-bottom: 1rem;
 }
 
-.card button {
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
+.card div button {
+  padding: 14px;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-acento) 100%);
   border: none;
-  border-radius: var(--radio-borde);
-  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: var(--transicion);
+  a {
+    text-decoration: none;
+    color: var(--color-blanco);
+  }
 }
 
-.card button:hover {
-  background-color: var(--color-secundario);
+.card div button:hover {
   transform: scale(1.05);
+  background: var(--color-secundario);
+  color: var(--color-blanco);
 }
 
 .cursos-lista p {
