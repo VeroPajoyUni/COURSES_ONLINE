@@ -7,6 +7,8 @@ from controllers.cursos_controller import CursosController
 from controllers.auth_controller import AuthController
 from controllers.inscripciones_controller import InscripcionesController
 from controllers.categorias_controller import CategoriasController
+from controllers.lecciones_controller import LeccionesController
+from controllers.quizzes_controller import QuizzesController
 
 class ServidorBasico(BaseHTTPRequestHandler):
 
@@ -49,6 +51,16 @@ class ServidorBasico(BaseHTTPRequestHandler):
         elif ruta == "/api/categorias":
             categorias = CategoriasController().listar_categorias()
             self._enviar_respuesta(200, categorias)
+
+        elif re.match(r"^/api/lecciones/curso/\d+$", ruta):
+            id_curso = int(ruta.split("/")[-1])
+            lecciones = LeccionesController().listar_por_curso(id_curso)
+            self._enviar_respuesta(200, lecciones)
+
+        elif re.match(r"^/api/quizzes/leccion/\d+$", ruta):
+            id_leccion = int(ruta.split("/")[-1])
+            quiz = QuizzesController().listar_por_leccion(id_leccion)
+            self._enviar_respuesta(200, quiz)
 
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
@@ -97,6 +109,17 @@ class ServidorBasico(BaseHTTPRequestHandler):
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
 
+        elif ruta == "/api/lecciones":
+            respuesta = LeccionesController().crear_leccion(datos)
+            codigo = 201 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
+        elif re.match(r"^/api/quizzes/leccion/\d+$", ruta):
+            id_leccion = int(ruta.split("/")[-1])
+            respuesta = QuizzesController().crear_quiz(id_leccion, datos)
+            codigo = 201 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
@@ -105,11 +128,12 @@ class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
     def do_PUT(self):
         ruta = urlparse(self.path).path
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length)
+        datos = json.loads(body.decode("utf-8")) if body else {}
+
         if re.match(r"^/api/cursos/\d+$", ruta):
             id_curso = int(ruta.split("/")[-1])
-            content_length = int(self.headers.get("Content-Length", 0))
-            body = self.rfile.read(content_length)
-            datos = json.loads(body.decode("utf-8"))
             respuesta = CursosController().actualizar_curso(id_curso, datos)
 
             if respuesta.get("sin_cambios"):
@@ -119,6 +143,13 @@ class ServidorBasico(BaseHTTPRequestHandler):
                 self._enviar_respuesta(200, respuesta)
             else:
                 self._enviar_respuesta(400, respuesta)
+
+        elif re.match(r"^/api/lecciones/\d+$", ruta):
+            id_leccion = int(ruta.split("/")[-1])
+            respuesta = LeccionesController().actualizar_leccion(id_leccion, datos)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
         else:
             self._enviar_respuesta(404, {"exito": False, "mensaje": "Ruta no encontrada"})
 
@@ -127,6 +158,7 @@ class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
     def do_DELETE(self):
         ruta = urlparse(self.path).path
+
         if re.match(r"^/api/cursos/\d+$", ruta):
             id_curso = int(ruta.split("/")[-1])
             respuesta = CursosController().eliminar_curso(id_curso)
@@ -134,6 +166,19 @@ class ServidorBasico(BaseHTTPRequestHandler):
                 respuesta["mensaje"] = "Curso eliminado exitosamente"
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
+
+        elif re.match(r"^/api/lecciones/\d+$", ruta):
+            id_leccion = int(ruta.split("/")[-1])
+            respuesta = LeccionesController().eliminar_leccion(id_leccion)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
+        elif re.match(r"^/api/quizzes/\d+$", ruta):
+            id_eval = int(ruta.split("/")[-1])
+            respuesta = QuizzesController().eliminar_quiz(id_eval)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
         else:
             self._enviar_respuesta(404, {"exito": False, "mensaje": "Ruta no encontrada"})
 

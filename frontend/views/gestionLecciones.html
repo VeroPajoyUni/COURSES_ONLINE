@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestión de lecciones - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/main.css" />
+  <link rel="stylesheet" href="../styles/css/gestionCursos.css" />
+</head>
+
+<body>
+  <div id="header-container"></div>
+
+  <main>
+    <section class="gestion-lecciones-container">
+      <h2>Gestión de lecciones</h2>
+
+      <div class="barra-acciones">
+        <button id="btnNuevaLeccion" class="btn-agregar">+ Nueva lección</button>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table id="tablaLecciones" class="tabla-cursos">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="tabla-vacia" style="display:none;">No se encontraron lecciones.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Modal: Crear / Editar Lección -->
+  <div id="modalLeccion" class="custom-modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="custom-modal modal-curso">
+      <h3 id="modalLeccionTitulo">Nueva lección</h3>
+      <form id="formLeccion" class="form-curso">
+        <label for="leccionTitulo">Título</label>
+        <input id="leccionTitulo" name="titulo" type="text" required />
+
+        <label for="leccionDescripcion">Descripción</label>
+        <textarea id="leccionDescripcion" name="descripcion" minlength="10" maxlength="255" required></textarea>
+
+        <div class="modal-actions">
+          <button type="button" id="btnCerrarModalLeccion" class="modal-btn">Cerrar</button>
+          <button type="submit" id="btnGuardarLeccion" class="modal-btn" disabled>Guardar lección</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmación personalizada -->
+  <div id="modalConfirmLeccion" class="custom-modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="custom-modal warning">
+      <h3>Confirmar acción</h3>
+      <p id="confirmMensajeLeccion">¿Seguro que deseas continuar?</p>
+      <div class="modal-actions">
+        <button id="confirmNoLeccion" class="modal-btn">Cancelar</button>
+        <button id="confirmSiLeccion" class="modal-btn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    await loadHeaderFooter();
+  </script>
+  <script type="module" src="../controllers/gestionLeccionesController.js"></script>
+</body>
+</html>

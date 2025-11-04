@@ -5,9 +5,6 @@ class Curso:
     def __init__(self):
         self.db = Database()
 
-    # ====================================================
-    #        OBTENER CURSOS
-    # ====================================================
     def obtener_todos(self):
         consulta = """
             SELECT 
@@ -87,7 +84,7 @@ class Curso:
         return resultado["total"] if resultado else 0
 
     # ====================================================
-    #                 MÉTODOS CRUD
+    #                 CRUD CURSOS
     # ====================================================
     def crear(self, datos):
         consulta = """

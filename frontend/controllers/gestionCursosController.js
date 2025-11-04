@@ -113,7 +113,7 @@ function renderTabla(cursos) {
         <td class="acciones">
           <button class="btn-accion btn-editar">Editar</button>
           <button class="btn-accion btn-eliminar">Eliminar</button>
-          <a class="btn-accion btn-gestionar" href="previsualizarCurso.html?id=${c.id_curso}">Lecciones</a>
+          <a class="btn-accion btn-gestionar" href="gestionLecciones.html?id=${c.id_curso}">Lecciones</a>
         </td>
       </tr>`
     )
@@ -204,6 +204,7 @@ function abrirModalNuevo() {
   editandoId = null;
   modalTitulo.textContent = "🆕 Nuevo Curso";
   form.reset();
+  form.cursoDescripcion.value = "";
   btnGuardar.disabled = true;
   modal.style.display = "flex";
 }

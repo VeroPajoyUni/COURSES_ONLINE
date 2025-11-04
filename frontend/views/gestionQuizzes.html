@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestión de quizzes - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/main.css" />
+  <link rel="stylesheet" href="../styles/css/gestionCursos.css" />
+</head>
+
+<body>
+  <div id="header-container"></div>
+
+  <main>
+    <section class="gestion-quizzes-container">
+      <h2>Gestión de quizzes</h2>
+
+      <div class="barra-acciones">
+        <button id="btnNuevoQuiz" class="btn-agregar">+ Nuevo Quiz</button>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table id="tablaQuizzes" class="tabla-cursos">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Fecha creación</th>
+              <th># Preguntas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="tabla-vacia" style="display:none;">No se encontraron quizzes.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Modal: Crear Quiz -->
+  <div id="modalQuiz" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal modal-curso">
+      <h3 id="modalQuizTitulo">🧩 Nuevo Quiz</h3>
+      <form id="formQuiz" class="form-curso">
+        <div class="preguntas-container">
+          <div class="pregunta-item">
+            <label>Pregunta</label>
+            <input type="text" class="texto-pregunta" required />
+
+            <div class="respuestas-container">
+              <div class="respuesta-item">
+                <input type="radio" name="correcta1" class="radio-correcta" />
+                <input type="text" class="texto-respuesta" placeholder="Opción 1" required />
+              </div>
+              <div class="respuesta-item">
+                <input type="radio" name="correcta1" class="radio-correcta" />
+                <input type="text" class="texto-respuesta" placeholder="Opción 2" required />
+              </div>
+              <div class="respuesta-item">
+                <input type="radio" name="correcta1" class="radio-correcta" />
+                <input type="text" class="texto-respuesta" placeholder="Opción 3" required />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="btnCerrarModalQuiz" class="modal-btn">Cerrar</button>
+          <button type="submit" id="btnGuardarQuiz" class="modal-btn">Guardar Quiz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmación -->
+  <div id="modalConfirmQuiz" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal warning">
+      <h3>Confirmar acción</h3>
+      <p id="confirmMensajeQuiz">¿Seguro que deseas continuar?</p>
+      <div class="modal-actions">
+        <button id="confirmNoQuiz" class="modal-btn">Cancelar</button>
+        <button id="confirmSiQuiz" class="modal-btn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    await loadHeaderFooter();
+  </script>
+  <script type="module" src="../controllers/gestionQuizzesController.js"></script>
+</body>
+</html>
