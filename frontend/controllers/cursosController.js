@@ -21,13 +21,15 @@ export async function mostrarCursos() {
   // Renderiza las tarjetas de cursos
   contenedor.innerHTML = cursos.map(curso => `
     <div class="card">
-      <div class="card-header">
+      <div>
         <span class="categoria">${curso.nombre_categoria}</span>
       </div>
-      <h3>${curso.titulo_curso}</h3>
-      <p class="descripcion">${curso.descripcion_curso}</p>
-      <div class="card-footer">
-        <a href="./previsualizarCurso.html?id=${curso.id_curso}" class="btn-all">Ver más</a>
+      <h3>${curso.titulo_curso || "Sin título"}</h3>
+      <p class="descripcion">${curso.descripcion_curso || "Sin descripción disponible"}</p>
+      <div>
+        <button>
+          <a href="./previsualizarCurso.html?id=${curso.id_curso}">Ver más</a>
+        </button>
       </div>
     </div>
   `).join("");

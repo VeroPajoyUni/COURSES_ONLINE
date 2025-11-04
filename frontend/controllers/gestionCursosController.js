@@ -6,7 +6,7 @@ import {
   actualizarCurso,
   eliminarCurso,
 } from "../assets/js/api.js";
-import { mostrarModal } from "./utils/modalAlertsController.js";
+import { mostrarModal, cerrarAlertas } from "./utils/modalAlertsController.js";
 
 // ================================
 // ELEMENTOS DEL DOM
@@ -152,12 +152,18 @@ async function manejarSubmit(e) {
       data.id_usuario = usuario.id_usuario;
       resp = await crearCurso(data);
     }
-    // Esperar un instante para asegurar que el backend actualizó
-    await new Promise((r) => setTimeout(r, 300));
 
-    // Recargar datos desde el backend
+    await new Promise((r) => setTimeout(r, 300)); // da tiempo al backend
     await cargarCursos(usuario.id_usuario);
 
+    mostrarModal({
+      titulo: "✅ Éxito",
+      mensaje: `Curso ${accion} correctamente.`,
+      tipo: "success",
+      onClose: () => {
+        cerrarModal();
+      },
+    });
   } catch (err) {
     console.error("Error al guardar curso:", err);
     mostrarModal({
@@ -165,8 +171,6 @@ async function manejarSubmit(e) {
       mensaje: "Error inesperado al guardar el curso.",
       tipo: "error",
     });
-  } finally {
-    cerrarModal();
   }
 }
 
@@ -196,6 +200,7 @@ function filtrarCursos() {
 // MODALES
 // ================================
 function abrirModalNuevo() {
+  cerrarAlertas(); // evita overlays activos
   editandoId = null;
   modalTitulo.textContent = "🆕 Nuevo Curso";
   form.reset();
@@ -204,6 +209,7 @@ function abrirModalNuevo() {
 }
 
 async function abrirModalEditar(id) {
+  cerrarAlertas(); // evita overlays activos
   const curso = cursosCache.find((c) => String(c.id_curso) === String(id));
   if (!curso) return;
 
@@ -220,6 +226,7 @@ async function abrirModalEditar(id) {
 
 function cerrarModal() {
   modal.style.display = "none";
+  cerrarAlertas(); // asegura limpieza total
 }
 
 // ================================
@@ -265,8 +272,10 @@ function confirmarEliminar(id) {
         titulo: "Éxito",
         mensaje: "Curso eliminado exitosamente.",
         tipo: "success",
+        onClose: async () => {
+          await cargarCursos(usuario.id_usuario);
+        },
       });
-      await cargarCursos(usuario.id_usuario);
     } else {
       mostrarModal({
         titulo: "Error",
