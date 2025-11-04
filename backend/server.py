@@ -9,6 +9,7 @@ from controllers.inscripciones_controller import InscripcionesController
 from controllers.categorias_controller import CategoriasController
 
 class ServidorBasico(BaseHTTPRequestHandler):
+
     # ==============================
     #         PETICIONES GET
     # ==============================
@@ -19,6 +20,19 @@ class ServidorBasico(BaseHTTPRequestHandler):
             cursos = CursosController().listar_cursos()
             self._enviar_respuesta(200, cursos)
 
+        elif re.match(r"^/api/gestion-cursos/\d+$", ruta):
+            id_instructor = int(ruta.split("/")[-1])
+            cursos = CursosController().listar_cursos_por_instructor(id_instructor)
+            self._enviar_respuesta(200, cursos)
+
+        elif re.match(r"^/api/cursos/\d+$", ruta):
+            id_curso = int(ruta.split("/")[-1])
+            curso = CursosController().obtener_detalle_curso(id_curso)
+            if curso:
+                self._enviar_respuesta(200, curso)
+            else:
+                self._enviar_respuesta(404, {"mensaje": "Curso no encontrado"})
+
         elif ruta == "/api/roles":
             roles = AuthController().obtener_roles()
             self._enviar_respuesta(200, roles)
@@ -27,18 +41,8 @@ class ServidorBasico(BaseHTTPRequestHandler):
             tipos = AuthController().obtener_tipos_documento()
             self._enviar_respuesta(200, tipos)
 
-        elif re.match(r"^/api/cursos/\d+$", ruta):
-            # Extraer el ID del curso
-            id_curso = int(ruta.split("/")[-1])
-            curso = CursosController().obtener_detalle_curso(id_curso)
-            if curso:
-                self._enviar_respuesta(200, curso)
-            else:
-                self._enviar_respuesta(404, {"mensaje": "Curso no encontrado"})
-
         elif re.match(r"^/api/inscripciones/usuario/\d+$", ruta):
             id_usuario = int(ruta.split("/")[-1])
-            print(f"Consultando inscripciones para usuario {id_usuario}")
             inscripciones = InscripcionesController().listar_por_usuario(id_usuario)
             self._enviar_respuesta(200, inscripciones)
 
@@ -54,9 +58,6 @@ class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
     def do_POST(self):
         ruta = urlparse(self.path).path
-        print(f"POST recibido: {ruta}")
-
-        # Leer el cuerpo de la petición
         content_length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(content_length)
         try:
@@ -85,23 +86,64 @@ class ServidorBasico(BaseHTTPRequestHandler):
         elif ruta == "/api/inscripciones":
             id_usuario = datos.get("id_usuario")
             id_curso = datos.get("id_curso")
-
             respuesta = InscripcionesController().inscribir(id_usuario, id_curso)
-
             codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
+        elif ruta == "/api/cursos":
+            respuesta = CursosController().crear_curso(datos)
+            if respuesta["exito"]:
+                respuesta["mensaje"] = "Curso creado exitosamente"
+            codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
 
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
     # ==============================
+    #         PETICIÓN PUT
+    # ==============================
+    def do_PUT(self):
+        ruta = urlparse(self.path).path
+        if re.match(r"^/api/cursos/\d+$", ruta):
+            id_curso = int(ruta.split("/")[-1])
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
+            datos = json.loads(body.decode("utf-8"))
+            respuesta = CursosController().actualizar_curso(id_curso, datos)
+
+            if respuesta.get("sin_cambios"):
+                self._enviar_respuesta(200, {"exito": True, "mensaje": "No se realizaron modificaciones"})
+            elif respuesta["exito"]:
+                respuesta["mensaje"] = "Curso actualizado correctamente"
+                self._enviar_respuesta(200, respuesta)
+            else:
+                self._enviar_respuesta(400, respuesta)
+        else:
+            self._enviar_respuesta(404, {"exito": False, "mensaje": "Ruta no encontrada"})
+
+    # ==============================
+    #         PETICIÓN DELETE
+    # ==============================
+    def do_DELETE(self):
+        ruta = urlparse(self.path).path
+        if re.match(r"^/api/cursos/\d+$", ruta):
+            id_curso = int(ruta.split("/")[-1])
+            respuesta = CursosController().eliminar_curso(id_curso)
+            if respuesta["exito"]:
+                respuesta["mensaje"] = "Curso eliminado exitosamente"
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+        else:
+            self._enviar_respuesta(404, {"exito": False, "mensaje": "Ruta no encontrada"})
+
+    # ==============================
     #         OPCIONES CORS
     # ==============================
     def do_OPTIONS(self):
-        """Maneja las peticiones OPTIONS para CORS"""
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
@@ -118,10 +160,10 @@ class ServidorBasico(BaseHTTPRequestHandler):
         )
 
     def _convertir_fecha(self, obj):
-        """Convierte objetos date y datetime a string para JSON"""
         if isinstance(obj, (date, datetime)):
             return obj.isoformat()
         raise TypeError(f"Tipo {type(obj)} no es serializable")
+
 
 if __name__ == "__main__":
     servidor = HTTPServer(("localhost", 5000), ServidorBasico)
