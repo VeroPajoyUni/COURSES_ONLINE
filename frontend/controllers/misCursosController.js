@@ -84,7 +84,7 @@ export async function mostrarMisCursos() {
                     <a href="#">Descargar certificado</a>
                   </button>`
                 : `<button>
-                    <a href="./previsualizarCurso.html?id=${detalle.id_curso}">Continuar el curso</a>
+                    <a href="./realizarCurso.html?id=${detalle.id_curso}">Continuar el curso</a>
                   </button>`
             }
           </div>

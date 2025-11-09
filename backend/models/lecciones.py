@@ -1,7 +1,6 @@
 from .database import Database
 from datetime import date
 
-
 class Leccion:
     def __init__(self):
         self.db = Database()
@@ -15,6 +14,7 @@ class Leccion:
                 l.id_leccion,
                 l.titulo_leccion,
                 l.descripcion_leccion,
+                l.contenido_leccion,
                 l.id_curso,
                 c.titulo_curso
             FROM lecciones l
@@ -31,6 +31,7 @@ class Leccion:
                 id_leccion,
                 titulo_leccion,
                 descripcion_leccion,
+                contenido_leccion,
                 id_curso
             FROM lecciones
             WHERE id_leccion = %s
@@ -43,12 +44,13 @@ class Leccion:
     # ====================================================
     def crear(self, datos):
         consulta = """
-            INSERT INTO lecciones (titulo_leccion, descripcion_leccion, id_curso)
+            INSERT INTO lecciones (titulo_leccion, descripcion_leccion, contenido_leccion, id_curso)
             VALUES (%s, %s, %s)
         """
         valores = (
             datos["titulo_leccion"],
             datos["descripcion_leccion"],
+            datos["contenido_leccion"],
             datos["id_curso"],
         )
         self.db.ejecutar(consulta, valores)
@@ -63,6 +65,7 @@ class Leccion:
         sin_cambios = (
             actual["titulo_leccion"] == datos["titulo_leccion"]
             and actual["descripcion_leccion"] == datos["descripcion_leccion"]
+            and actual["contenido_leccion"] == datos["contenido_leccion"]
         )
 
         if sin_cambios:
@@ -72,11 +75,13 @@ class Leccion:
             UPDATE lecciones
             SET titulo_leccion = %s,
                 descripcion_leccion = %s
+                contenido_leccion = %s
             WHERE id_leccion = %s
         """
         valores = (
             datos["titulo_leccion"],
             datos["descripcion_leccion"],
+            datos["contenido_leccion"],
             id_leccion,
         )
         self.db.ejecutar(consulta, valores)

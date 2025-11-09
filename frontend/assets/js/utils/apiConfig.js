@@ -12,7 +12,9 @@ export const API_URL = "http://localhost:5000/api";
  */
 export async function fetchData(url, options = {}) {
   try {
+    console.log("[DeBug] Bandera: Dentro de fetchData.")
     const respuesta = await fetch(url, options); // realiza la petición
+    console.log("[DeBug] Respuesta recibida de la API.", respuesta)
     const data = await respuesta.json();         // convierte la respuesta a JSON
     return data;                                  // retorna los datos obtenidos
   } catch (error) {
@@ -36,7 +38,10 @@ export async function fetchData(url, options = {}) {
  * @returns {object} - Objeto normalizado con { exito, data, mensaje }
  */
 export async function fetchJSON(url, options = {}) {
+  console.log("[DeBug] Bandera: Dentro de fetchJSON.", url, options)
+  console.log("[DeBug] Llamado a fetchData.");
   const data = await fetchData(url, options);
+  console.log("[DeBug] Respuesta recibida de fetchData.", data)
 
   try {
     // Si la respuesta ya tiene exito y data, se retorna tal cual

@@ -1,0 +1,57 @@
+import { API_URL, fetchJSON } from "../utils/apiConfig.js";
+
+/**
+ * Obtiene todas las evaluaciones (quiz o finales) asociadas a una lección específica.
+ * Retorna { exito, data: [...evaluaciones], mensaje }.
+ */
+export async function listarEvaluacionesPorLeccion(id_leccion) {
+  const response = await fetchJSON(`${API_URL}/evaluaciones/leccion/${id_leccion}`);
+  console.log("[Evaluaciones] Evaluaciones obtenidas por lección:", response);
+
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Evaluaciones obtenidas correctamente.";
+
+  return response;
+}
+
+/**
+ * Guarda la calificación del usuario para una evaluación específica.
+ * Envía { id_usuario, id_evaluacion, calificacion } mediante POST.
+ * Retorna { exito, data, mensaje }.
+ */
+export async function guardarCalificacion(id_usuario, id_evaluacion, calificacion) {
+  const body = { id_usuario, id_evaluacion, calificacion };
+  const response = await fetchJSON(`${API_URL}/calificaciones`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  console.log("[Calificaciones] Calificación guardada:", response);
+
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Calificación guardada exitosamente.";
+
+  return response;
+}
+
+/**
+ * Marca una lección como completada dentro del progreso del usuario.
+ * Envía { id_usuario, id_curso, id_leccion } mediante PUT al endpoint de inscripciones.
+ * Retorna { exito, data, mensaje }.
+ */
+export async function marcarLeccionCompletada(id_usuario, id_curso, id_leccion) {
+  const body = { id_usuario, id_curso, id_leccion };
+  console.log("[DeBug] Bandera dentro de la API.", body)
+
+  const response = await fetchJSON(`${API_URL}/inscripciones/progreso`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  console.log("[DeBug] Respuesta de la API dentro de la API.", response)
+
+  if (response.exito && !response.mensaje)
+    response.mensaje = "Progreso actualizado correctamente.";
+  return response;
+}
