@@ -1,4 +1,5 @@
 from models.autenticacion import Auth
+from utils.response import manejar_exito, manejar_error
 
 class AuthController:
     def __init__(self):
@@ -10,30 +11,14 @@ class AuthController:
         Procesa el inicio de sesión.
         """
         if not correo or not contrasenia:
-            return {
-                "exito": False,
-                "mensaje": "Correo y contraseña son obligatorios"
-            }
+            return manejar_error(Exception("Campos vacíos"), "Correo y contraseña son obligatorios")
 
-        usuario = self.auth.verificar_credenciales(correo, contrasenia)
-
-        if usuario:
-            return {
-                "exito": True,
-                "mensaje": "Inicio de sesión exitoso",
-                "usuario": {
-                    "id": usuario["id_usuario"],
-                    "nombre": usuario["nombre_usuario"],
-                    "correo": usuario["correo"],
-                    "rol": usuario["nombre_rol"],
-                    "id_rol": usuario["id_rol"]
-                }
-            }
-        else:
-            return {
-                "exito": False,
-                "mensaje": "Correo o contraseña incorrectos"
-            }
+        try:
+            usuario = self.auth.verificar_credenciales(correo, contrasenia)
+            print("[DeBug]: Usuario autenticado:", usuario)
+            return manejar_exito(usuario, "Inicio de sesión exitoso")
+        except Exception as e:
+            return manejar_error(e, "Correo o contraseña incorrectos")
 
     def registrar(self, nombre, correo, contrasenia, id_rol, id_tipo_documento, numero_identificacion):
         """
