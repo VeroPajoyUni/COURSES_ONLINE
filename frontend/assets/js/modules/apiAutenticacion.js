@@ -6,19 +6,36 @@ import { API_URL, fetchJSON } from "../utils/apiConfig.js";
  * Almacena los datos del usuario en sessionStorage si la autenticación es exitosa.
  */
 export async function login(correo, contrasenia) {
-  const response = await fetchJSON(`${API_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ correo, contrasenia })
-  });
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ correo, contrasenia }),
+    });
 
-  if (response.exito && response.data) {
-    sessionStorage.setItem("usuario", JSON.stringify(response.data.usuario));
-    console.log("Login exitoso:", response.data.usuario);
+    const data = await response.json().catch(() => ({}));
+
+    // Si el backend respondió con error HTTP
+    if (!response.ok) {
+      return {
+        exito: false,
+        mensaje: data.mensaje || data.error || "Credenciales incorrectas. Verifica tus datos.",
+      };
+    }
+
+    // Si el backend responde correctamente
+    if (data.exito && data.data) {
+      sessionStorage.setItem("usuario", JSON.stringify(data.data.usuario));
+      console.log("Login exitoso:", data.data.usuario);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en la solicitud de login:", error);
+    return { exito: false, mensaje: "Error de conexión con el servidor." };
   }
-
-  return response; // siempre devuelve { exito, data, mensaje }
 }
+
 
 /**
  * Función para cerrar sesión.

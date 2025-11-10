@@ -6,8 +6,6 @@ import { SessionManager } from "../controllers/utils/sessionManager.js";
 // ==========================
 // Expresiones regulares para validar correo y contraseña
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&¿?¡.+*])[A-Za-z\d!@#$%&¿?¡.+*]{8,15}$/;
 
 // ==========================
 // Mostrar/ocultar contraseña
@@ -40,10 +38,6 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   }
   if (!emailRegex.test(correo)) {
     mostrarError("Formato de correo electrónico no válido");
-    return;
-  }
-  if (!passwordRegex.test(contrasenia)) {
-    mostrarError("La contraseña no cumple con los requisitos de seguridad");
     return;
   }
 

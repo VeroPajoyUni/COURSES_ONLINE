@@ -67,9 +67,10 @@
             type="password" 
             id="contrasenia" 
             name="contrasenia" 
-            placeholder="Mínimo 6 caracteres"
+            placeholder="De 8 a 15 caracteres"
             required
-            minlength="6"
+            minlength="8"
+            maxlength="15"
           />
         </div>
 
@@ -80,18 +81,13 @@
             id="confirmar-contrasenia" 
             name="confirmar-contrasenia" 
             placeholder="Repite tu contraseña"
-            required 
+            required
+            minlength="8"
+            maxlength="15"
           />
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="id_rol">Tipo de usuario</label>
-            <select id="id_rol" name="id_rol" required>
-              <option value="">Selecciona...</option>
-            </select>
-          </div>
-        </div>
+
 
         <div id="mensaje" class="mensaje" style="display: none;"></div>
 
