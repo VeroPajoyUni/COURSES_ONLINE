@@ -8,6 +8,7 @@ class ProgresoController:
     def marcar_leccion_completada(self, id_usuario, id_curso, id_leccion):
         try:
             if self.progreso.validar_leccion_completada(id_usuario, id_curso, id_leccion):
+                print("[DeBug] La lección ya estaba marcada como completada.")
                 return manejar_accion_exitosa("La lección ya estaba marcada como completada.")
             
             self.progreso.leccion_completada(id_usuario, id_curso, id_leccion)
