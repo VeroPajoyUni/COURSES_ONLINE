@@ -12,9 +12,9 @@ export const SessionManager = {
    */
   guardarUsuario(usuario) {
     sessionStorage.setItem("usuarioLogueado", "true");
-    sessionStorage.setItem("id_usuario", usuario.id_usuario || usuario.id);
-    sessionStorage.setItem("usuarioNombre", usuario.nombre);
-    sessionStorage.setItem("usuarioRol", usuario.rol);
+    sessionStorage.setItem("id_usuario", usuario.id_usuario);
+    sessionStorage.setItem("usuarioNombre", usuario.nombre_usuario);
+    sessionStorage.setItem("usuarioRol", usuario.nombre_rol);
     sessionStorage.setItem("usuario", JSON.stringify(usuario)); // Guardado completo
   },
 

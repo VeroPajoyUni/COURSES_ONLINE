@@ -53,7 +53,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     /**
      * El backend devuelve la estructura: { exito, mensaje, usuario }
      */
-    const usuario = respuesta.data.usuario;
+    const usuario = respuesta.data;
 
     // Guarda el usuario correctamente en la sesión
     SessionManager.guardarUsuario(usuario);
