@@ -30,9 +30,15 @@ export async function mostrarMisCursos() {
     const response = await obtenerInscripcionesUsuario(usuario.id_usuario);
     console.log("Inscripciones del usuario:", response);
 
-    // Validación: si no hay cursos inscritos
-    if (!response || !response.exito || !Array.isArray(response.data) || response.data.length === 0) {
-      console.info("No hay cursos inscritos para este usuario.");
+    // Validación robusta: asegurar que la respuesta sea exitosa y contenga datos
+    const sinInscripciones =
+      response?.exito === true &&
+      Array.isArray(response.data) &&
+      response.data.length === 0;
+
+    // Solo mostrar el mensaje si realmente no hay inscripciones registradas
+    if (sinInscripciones) {
+      console.info("El usuario no tiene inscripciones registradas.");
       mostrarModal({
         titulo: "¡Ups! 🫡",
         mensaje: "Aún no estás inscrito a ningún curso.",
@@ -43,6 +49,18 @@ export async function mostrarMisCursos() {
       // Redirigir al index si el usuario pulsa el botón
       const modalBtn = document.querySelector(".modal-btn");
       if (modalBtn) modalBtn.addEventListener("click", () => window.location.href = "./index.html");
+      return [];
+    }
+
+    // Si la API no fue exitosa o los datos no son válidos, mostrar error general
+    if (!response || response.exito === false) {
+      console.error("Error al obtener las inscripciones del usuario:", response?.mensaje);
+      mostrarModal({
+        titulo: "Error al cargar cursos",
+        mensaje: response?.mensaje || "No se pudieron cargar tus cursos. Intenta nuevamente.",
+        tipo: "error",
+        boton: "Aceptar"
+      });
       return [];
     }
 

@@ -34,17 +34,3 @@ class InscripcionesController:
             return manejar_exito(datos, mensaje)
         except Exception as e:
             return manejar_error(e, "Error al listar las inscripciones del usuario")
-
-    def actualizar_progreso(self, id_usuario, id_curso, id_leccion):
-        try:
-            print(f"[DeBug] Dentro de Actualizar Progreso.\nUsuario: {id_usuario}, Curso: {id_curso}, Lección: {id_leccion}")
-            if not id_usuario or not id_curso or not id_leccion:
-                return manejar_error(Exception("Datos incompletos"), "Faltan datos para actualizar el progreso")
-            print("[DeBug] Datos completos verificados.")
-            if not self.inscripciones.esta_inscrito(id_usuario, id_curso):
-                return manejar_error(Exception("No inscrito"), "El usuario no está inscrito en este curso")
-            print("[DeBug] Usuario inscrito verificado.")
-            self.inscripciones.actualizar_progreso(id_usuario, id_curso, id_leccion)
-            return manejar_accion_exitosa("Progreso actualizado correctamente")
-        except Exception as e:
-            return manejar_error(e, "Error al actualizar el progreso del curso")

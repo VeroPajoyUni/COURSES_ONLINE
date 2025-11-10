@@ -36,7 +36,6 @@ class Inscripciones:
         consulta = """
             SELECT 
                 fecha_inscripcion,
-                progreso,
                 id_usuario,
                 id_curso,
                 id_estado 
@@ -52,7 +51,7 @@ class Inscripciones:
             return {"exito": False, "mensaje": "Estado 'Inscrito' no encontrado."}
 
         consulta = """
-            INSERT INTO inscripciones (fecha_inscripcion, progreso, id_usuario, id_curso, id_estado)
+            INSERT INTO inscripciones (fecha_inscripcion, id_usuario, id_curso, id_estado)
             VALUES (CURDATE(), 0, %s, %s, %s)
         """
         try:
@@ -70,8 +69,7 @@ class Inscripciones:
                 i.id_curso,
                 c.titulo_curso,
                 i.fecha_inscripcion,
-                e.nombre_estado,
-                i.progreso
+                e.nombre_estado
             FROM inscripciones i
             JOIN cursos c ON i.id_curso = c.id_curso
             JOIN estados e ON i.id_estado = e.id_estado
@@ -81,29 +79,6 @@ class Inscripciones:
         self.db.ejecutar(consulta, (id_usuario,))
         return self.db.obtener_todos()
 
-    # ====================================================
-    #                  ACTUALIZAR PROGRESO
-    # ====================================================
-    def actualizar_progreso(self, id_usuario, id_curso, progreso):
-        """
-        Actualiza el progreso del usuario (0–100%).
-        """
-        print("[DeBug] Dentro de Actualizar Progreso con:\nID Usuario:", id_usuario, "ID Curso:", id_curso, "Progreso:", progreso)
-        consulta = """
-            UPDATE inscripciones
-            SET progreso = %s
-            WHERE id_usuario = %s AND id_curso = %s
-        """
-        try:
-            self.db.ejecutar(consulta, (progreso, id_usuario, id_curso))
-            self.db.confirmar()
-            return {"exito": True, "mensaje": "Progreso actualizado correctamente."}
-        except Exception as e:
-            return {"exito": False, "mensaje": f"Error al actualizar progreso: {e}"}
-
-    # ====================================================
-    #           CONSULTAS Y CÁLCULOS DE PROGRESO
-    # ====================================================
     def obtener_por_usuario_y_curso(self, id_usuario, id_curso):
         consulta = """
             SELECT * 
@@ -128,20 +103,3 @@ class Inscripciones:
             """
             self.db.ejecutar(consulta_insert, (id_usuario, id_evaluacion, 100))
             self.db.confirmar()
-
-    def calcular_progreso(self, id_usuario, id_curso, total_lecciones):
-        """
-        Calcula el progreso del usuario basado en las lecciones completadas.
-        """
-        consulta = """
-            SELECT COUNT(DISTINCT e.id_leccion) AS completadas
-            FROM calificaciones c
-            JOIN evaluaciones e ON e.id_evaluacion = c.id_evaluacion
-            WHERE c.id_usuario = %s
-              AND e.id_leccion IN (SELECT id_leccion FROM lecciones WHERE id_curso = %s)
-        """
-        self.db.ejecutar(consulta, (id_usuario, id_curso))
-        resultado = self.db.obtener_uno()
-        completadas = resultado["completadas"] if resultado else 0
-        progreso = int((completadas / total_lecciones) * 100) if total_lecciones > 0 else 0
-        return min(progreso, 100)
