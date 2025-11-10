@@ -12,3 +12,4 @@ export * from "../../assets/js/modules/apiCursos.js";
 export * from "../../assets/js/modules/apiLecciones.js";
 export * from "../../assets/js/modules/apiEvaluaciones.js";
 export * from "../../assets/js/modules/apiInscripciones.js";
+export * from "../../assets/js/modules/apiProgreso.js";

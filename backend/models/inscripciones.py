@@ -70,7 +70,8 @@ class Inscripciones:
                 i.id_curso,
                 c.titulo_curso,
                 i.fecha_inscripcion,
-                e.nombre_estado --,i.progreso
+                e.nombre_estado,
+                i.progreso
             FROM inscripciones i
             JOIN cursos c ON i.id_curso = c.id_curso
             JOIN estados e ON i.id_estado = e.id_estado

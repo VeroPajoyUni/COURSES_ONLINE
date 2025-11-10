@@ -3,6 +3,7 @@ import {
   listarEvaluacionesPorLeccion,
   guardarCalificacion,
   marcarLeccionCompletada,
+  leccionesCompletadas,
   obtenerInscripcionesUsuario
 } from "../assets/js/api.js";
 
@@ -253,27 +254,33 @@ async function cargarRealizarCurso() {
   // ============================
   btnCompletar.addEventListener("click", async () => {
     if (!leccionActual) return;
-    console.log("[DeBug] Evento de clic activado.", leccionActual)
-
+    console.log("[DeBug]: Marcando lección como completada.");
     const res = await marcarLeccionCompletada(id_usuario, leccionActual.id_curso, leccionActual.id_leccion);
-    console.log("[DeBug] Respuesta de la API recibida.", res)
     if (res.exito) {
+      console.log("[DeBug]: Lección marcada como completada.");
       mostrarModal({
         titulo: "✅ Éxito",
         mensaje: res.mensaje,
         tipo: "success",
         boton: "Aceptar",
       });
+      
+      // Actualizar progreso
+      console.log("[DeBug]: Actualizando progreso del curso.");
+      const resp = await leccionesCompletadas(id_usuario, leccionActual.id_curso);
+      console.log("[DeBug]: Respuesta de lecciones completadas:", resp);
 
-      if (res.data?.progreso !== undefined) {
-        progresoBarra.value = res.data.progreso;
-        progresoTexto.textContent = `${res.data.progreso}%`;
-      }
+      const lecCompletadas = resp.data.length
+      const totalLecciones = lecciones.length;
+      const progreso = Math.round((lecCompletadas / totalLecciones) * 100);
+      progresoBarra.value = progreso;
+      progresoTexto.textContent = `${progreso}%`;
+      console.log("[DeBug]: Lecciones completadas:", lecCompletadas);
+      console.log("[DeBug]: Total de lecciones:", totalLecciones);
+      console.log("[DeBug]: Progreso calculado:", progreso);
 
-      mensajeUsuario.textContent = "Lección completada correctamente.";
-      mensajeUsuario.classList.add("exito");
-      mensajeUsuario.hidden = false;
     } else {
+      console.log("[DeBug]: Error al marcar lección como completada.");
       mostrarModal({
         titulo: "⚠️ Error",
         mensaje: res.mensaje || "No se pudo actualizar el progreso.",

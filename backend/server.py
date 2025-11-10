@@ -145,6 +145,22 @@ class ServidorBasico(BaseHTTPRequestHandler):
             respuesta = EvaluacionesController().crear(id_leccion, id_tipo)
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
+        
+        # TODO: EndPoint por completar para identificar que botones deshabilitar
+        elif ruta == "/api/leccion/progreso":
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+            id_leccion = datos.get("id_leccion")
+
+        # TODO: EndPoint para obtener lecciones completadas para un usuario en un curso
+        elif ruta == "/api/leccion/completadas":
+            print(f"[DeBug]: Dentro del servidor POST /api/leccion/completadas")
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+            print(f"[DeBug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}")
+            respuesta = ProgresoController().obtener_lecciones_completadas(id_usuario=id_usuario, id_curso=id_curso)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
 
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
@@ -154,13 +170,9 @@ class ServidorBasico(BaseHTTPRequestHandler):
     # ==============================
     def do_PUT(self):
         ruta = urlparse(self.path).path
-        print("[DeBug] Metodo do_PUT invocado.", ruta)
         content_length = int(self.headers.get("Content-Length", 0))
-        print("[DeBug] Content-Length recibido:", content_length)
         body = self.rfile.read(content_length)
-        print("[DeBug] Body recibido:", body)
         datos = json.loads(body.decode("utf-8")) if body else {}
-        print("[DeBug] Body decodificado:", datos)
 
         if re.match(r"^/api/cursos/\d+$", ruta):
             id_curso = int(ruta.split("/")[-1])
@@ -180,16 +192,16 @@ class ServidorBasico(BaseHTTPRequestHandler):
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
 
-        elif ruta == "/api/inscripciones/progreso":
+        elif ruta == "/api/leccion/completar_leccion":
+            print("[DeBug]: Dentro del servidor PUT /api/leccion/completar_leccion")
             id_usuario = datos.get("id_usuario")
             id_curso = datos.get("id_curso")
             id_leccion = datos.get("id_leccion")
-            print(f"[DeBug] Ingreso a la ruta correcta:\n  id_usuario: {id_usuario}\n  id_curso: {id_curso}\n  id_leccion: {id_leccion}")
-            print(f"[DeBug] Antes de entrar a Actualizar Progreso.")
-            respuesta = InscripcionesController().actualizar_progreso(id_usuario, id_curso, id_leccion)
+            print(f"[Debug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}\n Leccion: {id_leccion}")
+            respuesta = ProgresoController().marcar_leccion_completada(id_usuario=id_usuario, id_curso=id_curso, id_leccion=id_leccion)
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
-            
+
         else:
             self._enviar_respuesta(404, {"exito": False, "mensaje": "Ruta no encontrada"})
 
