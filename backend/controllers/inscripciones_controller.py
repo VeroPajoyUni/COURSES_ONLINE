@@ -18,22 +18,19 @@ class InscripcionesController:
             if self.inscripciones.curso_finalizado(id_curso):
                 return manejar_error(Exception("Curso finalizado"), "El curso ya ha finalizado")
 
-            exito = self.inscripciones.inscribir_usuario(id_usuario, id_curso)
-            if exito:
-                return manejar_accion_exitosa("Inscripción exitosa")
-            else:
-                return manejar_error(Exception("Fallo en BD"), "Error al inscribirse en el curso")
-
+            self.inscripciones.inscribir_usuario(id_usuario, id_curso)
+            return manejar_accion_exitosa("Inscripción realizada correctamente")
         except Exception as e:
             return manejar_error(e, "Error al procesar la inscripción")
 
     def listar_por_usuario(self, id_usuario):
-        """Obtiene todas las inscripciones de un usuario."""
         try:
             datos = self.inscripciones.listar_por_usuario(id_usuario)
             mensaje = (
-                f"Se encontraron {len(datos)} inscripciones" if datos else "El usuario no tiene inscripciones"
+                f"Se encontraron {len(datos)} inscripciones"
+                if datos
+                else "El usuario no tiene inscripciones registradas"
             )
             return manejar_exito(datos, mensaje)
         except Exception as e:
-            return manejar_error(e, "Error al obtener las inscripciones del usuario")
+            return manejar_error(e, "Error al listar las inscripciones del usuario")

@@ -4,8 +4,8 @@
   "description": "Frontend del proyecto COURSESONLINE - Aplicación web educativa desarrollada sin frameworks, utilizando HTML, CSS y JavaScript puro.",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "cd ../backend && python server.py",
+    "start": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd ../backend && python -u server.py",
     "frontend": "lite-server"
   },
   "author": "Yisel Verónica Pajoy Maca, Adiel Felipe Esponisa Muñoz, Yeison Alexis Añasco Benavides",

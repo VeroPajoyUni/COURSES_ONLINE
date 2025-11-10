@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Realizar Curso - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/main.css">
+  <link rel="stylesheet" href="../styles/css/realizarCurso.css">
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <main class="curso-layout">
+    <!-- =======================
+         PANEL LATERAL DE LECCIONES
+    ======================== -->
+    <aside class="sidebar">
+      <h3>Lecciones</h3>
+      <ul id="listaLecciones"></ul>
+    </aside>
+
+    <!-- =======================
+         SECCIÓN PRINCIPAL DE CONTENIDO
+    ======================== -->
+    <section class="contenido">
+      <div id="infoCurso">
+        <h2 id="tituloCurso"></h2>
+        <p id="descripcionCurso"></p>
+        <div id="progresoContainer">
+          <label for="progreso">Progreso:</label>
+          <progress id="progreso" value="0" max="100"></progress>
+          <span id="progresoTexto">0%</span>
+        </div>
+      </div>
+
+      <div id="contenidoLeccion" class="contenido-leccion">
+        <p>Selecciona una lección para comenzar.</p>
+      </div>
+
+      <!-- =======================
+           CONTENEDOR DE QUIZZES
+      ======================== -->
+      <div id="quizContainer" class="quiz-container" hidden>
+        <h4>Quiz de esta lección</h4>
+        <form id="quizForm"></form>
+        <div id="quizFeedback" class="feedback"></div>
+        <button id="btnEnviarQuiz" class="btn-accion">Enviar Quiz</button>
+      </div>
+
+      <!-- =======================
+           BOTÓN PARA MARCAR LECCIÓN COMPLETADA
+      ======================== -->
+      <div class="acciones-leccion">
+        <button id="btnCompletarLeccion" class="btn-accion" disabled>
+          Lección completada
+        </button>
+      </div>
+
+      <!-- =======================
+           NOTIFICACIONES / MENSAJES
+      ======================== -->
+      <div id="mensajeUsuario" class="mensaje-usuario" hidden></div>
+    </section>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    await loadHeaderFooter();
+  </script>
+
+  <script type="module" src="../controllers/realizarCursoController.js"></script>
+</body>
+</html>

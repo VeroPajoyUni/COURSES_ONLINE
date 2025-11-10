@@ -9,6 +9,9 @@ from controllers.inscripciones_controller import InscripcionesController
 from controllers.categorias_controller import CategoriasController
 from controllers.lecciones_controller import LeccionesController
 from controllers.quizzes_controller import QuizzesController
+from controllers.progreso_controller import ProgresoController
+from controllers.calificaciones_controller import CalificacionesController
+from controllers.evaluaciones_controller import EvaluacionesController
 
 class ServidorBasico(BaseHTTPRequestHandler):
 
@@ -61,6 +64,17 @@ class ServidorBasico(BaseHTTPRequestHandler):
             id_leccion = int(ruta.split("/")[-1])
             quiz = QuizzesController().listar_por_leccion(id_leccion)
             self._enviar_respuesta(200, quiz)
+
+        elif re.match(r"^/api/evaluaciones/leccion/\d+$", ruta):
+            id_leccion = int(ruta.split("/")[-1])
+            evaluaciones = EvaluacionesController().listar_por_leccion(id_leccion)
+            self._enviar_respuesta(200, evaluaciones)
+
+        elif re.match(r"^/api/evaluaciones/\d+$", ruta):
+            id_evaluacion = int(ruta.split("/")[-1])
+            detalle = EvaluacionesController().obtener_detalle(id_evaluacion)
+            codigo = 200 if detalle["exito"] else 404
+            self._enviar_respuesta(codigo, detalle)
 
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
@@ -120,6 +134,34 @@ class ServidorBasico(BaseHTTPRequestHandler):
             codigo = 201 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
 
+        elif ruta == "/api/calificaciones":
+            respuesta = CalificacionesController().guardar_calificacion(datos)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
+        elif ruta == "/api/evaluaciones":
+            id_leccion = datos.get("id_leccion")
+            id_tipo = datos.get("id_tipo", 1)
+            respuesta = EvaluacionesController().crear(id_leccion, id_tipo)
+            codigo = 201 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+        
+        # TODO: EndPoint por completar para identificar que botones deshabilitar
+        elif ruta == "/api/leccion/progreso":
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+            id_leccion = datos.get("id_leccion")
+
+        # TODO: EndPoint para obtener lecciones completadas para un usuario en un curso
+        elif ruta == "/api/leccion/completadas":
+            print(f"[DeBug]: Dentro del servidor POST /api/leccion/completadas")
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+            print(f"[DeBug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}")
+            respuesta = ProgresoController().obtener_lecciones_completadas(id_usuario=id_usuario, id_curso=id_curso)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
         else:
             self._enviar_respuesta(404, {"mensaje": "Ruta no encontrada"})
 
@@ -147,6 +189,16 @@ class ServidorBasico(BaseHTTPRequestHandler):
         elif re.match(r"^/api/lecciones/\d+$", ruta):
             id_leccion = int(ruta.split("/")[-1])
             respuesta = LeccionesController().actualizar_leccion(id_leccion, datos)
+            codigo = 200 if respuesta["exito"] else 400
+            self._enviar_respuesta(codigo, respuesta)
+
+        elif ruta == "/api/leccion/completar_leccion":
+            print("[DeBug]: Dentro del servidor PUT /api/leccion/completar_leccion")
+            id_usuario = datos.get("id_usuario")
+            id_curso = datos.get("id_curso")
+            id_leccion = datos.get("id_leccion")
+            print(f"[Debug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}\n Leccion: {id_leccion}")
+            respuesta = ProgresoController().marcar_leccion_completada(id_usuario=id_usuario, id_curso=id_curso, id_leccion=id_leccion)
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
 
@@ -208,7 +260,6 @@ class ServidorBasico(BaseHTTPRequestHandler):
         if isinstance(obj, (date, datetime)):
             return obj.isoformat()
         raise TypeError(f"Tipo {type(obj)} no es serializable")
-
 
 if __name__ == "__main__":
     servidor = HTTPServer(("localhost", 5000), ServidorBasico)
