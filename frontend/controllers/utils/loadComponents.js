@@ -49,9 +49,6 @@ function actualizarHeaderSegunSesion() {
   if (usuario && usuario.rol?.toLowerCase() === "instructor") {
     // Si es Instructor, mostrar "Gestión de Cursos"
     nav.innerHTML += `<li><a href="gestionCursos.html">Gestión de Cursos</a></li>`;
-  } else {
-    // Para cualquier otro rol o visitante, mostrar "Cursos"
-    nav.innerHTML += `<li><a href="index.html">Cursos</a></li>`;
   }
 
   // // Enlace común
