@@ -118,7 +118,6 @@ async function init() {
     if (!leccion) return;
 
     leccionActual = leccion;
-    btnCompletar.disabled = false;
 
     contenido.innerHTML = `
       <h2>${leccion.titulo_leccion}</h2>
@@ -133,6 +132,11 @@ async function init() {
         }
       </div>
     `;
+
+    if ((await leccionesCompletadas(id_usuario, leccionActual.id_curso)).data.some(item => item.id_leccion === leccionActual.id_leccion)){
+      btnCompletar.innerHTML = "Siguiente Lección"
+    }
+    btnCompletar.disabled = false;
   }
 
   // ============================
@@ -152,7 +156,6 @@ async function init() {
       // Actualizar progreso
       actualizarProgreso(id_usuario, leccionActual.id_curso);
 
-      // TODO: Revisar si en este punto es donde se debe cambiar el botón Lección Completada por Siguiente Lección cuando la lección ya está completada.
     } else {
       mostrarModal({
         titulo: "⚠️ Error",
