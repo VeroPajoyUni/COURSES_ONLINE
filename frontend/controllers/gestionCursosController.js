@@ -1,6 +1,7 @@
 import { SessionManager } from "./utils/sessionManager.js";
 import {
   listarCursosInstructor,
+  listarLeccionesPorCurso,
   getCategorias,
   crearCurso,
   actualizarCurso,
@@ -76,6 +77,9 @@ async function cargarCursos(id_instructor) {
       ? resp.data.sort((a, b) => new Date(b.fecha_inicio) - new Date(a.fecha_inicio))
       : [];
 
+    // Cargar el número total de lecciones para cada curso
+    await agregarLeccionesACursos(cursosCache);
+
     renderTabla(cursosCache);
   } catch (err) {
     console.error("Error cargando cursos:", err);
@@ -84,6 +88,21 @@ async function cargarCursos(id_instructor) {
       mensaje: "Error al obtener los cursos desde el servidor.",
       tipo: "error",
     });
+  }
+}
+
+/**
+ * Función auxiliar para agregar el total de lecciones a cada curso
+ */
+async function agregarLeccionesACursos(cursos) {
+  for (const curso of cursos) {
+    try {
+      const resp = await listarLeccionesPorCurso(curso.id_curso);
+      curso.total_lecciones = Array.isArray(resp.data) ? resp.data.length : 0;
+    } catch (error) {
+      console.warn(`Error al cargar lecciones del curso ${curso.id_curso}:`, error);
+      curso.total_lecciones = 0;
+    }
   }
 }
 
@@ -108,7 +127,7 @@ function renderTabla(cursos) {
         <td>${c.nombre_categoria}</td>
         <td>${c.fecha_inicio}</td>
         <td>${c.fecha_fin}</td>
-        <td>${c.total_lecciones ?? c.num_lecciones ?? 0}</td>
+        <td>${c.total_lecciones ?? 0}</td>
         <td>${c.estado ?? "Activo"}</td>
         <td class="acciones">
           <button class="btn-accion btn-editar">Editar</button>
