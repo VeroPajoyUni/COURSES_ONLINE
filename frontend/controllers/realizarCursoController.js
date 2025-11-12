@@ -91,23 +91,26 @@ async function init() {
       .join("");
 
     sidebar.querySelectorAll("li").forEach((li) => {
-      li.addEventListener("click", () => cargarLeccion(li.dataset.id));
+      li.addEventListener("click", async () => await cargarLeccion(li.dataset.id));
     });
   }
 
   // Cargar la primera lección por defecto y el progreso actual
   if (lecciones.length > 0) {
-    cargarLeccion(lecciones[0].id_leccion);
-    actualizarProgreso(id_usuario, leccionActual.id_curso);
+    await cargarLeccion(lecciones[0].id_leccion);
+    await calcularProgreso(id_usuario, leccionActual.id_curso, true);
   }
 
-  async function actualizarProgreso(id_usuario, id_curso) {
-      const resp = await leccionesCompletadas(id_usuario, id_curso);
-      const lecCompletadas = resp.data.length
-      const totalLecciones = lecciones.length;
-      const progreso = Math.round((lecCompletadas / totalLecciones) * 100);
-      progresoBarra.value = progreso;
-      progresoTexto.textContent = `${progreso}%`;
+  async function calcularProgreso(id_usuario, id_curso, actualizacion) {
+    const resp = await leccionesCompletadas(id_usuario, id_curso);
+    const lecCompletadas = resp.data.length
+    const totalLecciones = lecciones.length;
+    const progreso = Math.round((lecCompletadas / totalLecciones) * 100);
+    if (!actualizacion) {
+      return progreso
+    }
+    progresoBarra.value = progreso;
+    progresoTexto.textContent = `${progreso}%`;
   }
 
   // ============================
@@ -132,11 +135,24 @@ async function init() {
         }
       </div>
     `;
-
+    // Identificar si la lección ya se encuentra completada o no.
+    btnCompletar.className = "btn-leccion-completada"
+    btnCompletar.disable = false;
+    btnCompletar.style.pointerEvents = "auto";
     if ((await leccionesCompletadas(id_usuario, leccionActual.id_curso)).data.some(item => item.id_leccion === leccionActual.id_leccion)){
-      btnCompletar.innerHTML = "Siguiente Lección"
+      if (leccion.id_leccion === lecciones[lecciones.length-1]["id_leccion"]){
+        btnCompletar.innerHTML = "Realizar Evaluación"
+        if (progresoTexto!=100){
+          btnCompletar.className = "btn-leccion-completada-deshabilitar"
+          btnCompletar.disable = true;
+          btnCompletar.style.pointerEvents = "none";
+        }
+      } else {
+        btnCompletar.innerHTML = "Siguiente Lección"
+      }
+    } else {
+      btnCompletar.innerHTML = "Completar Lección"
     }
-    btnCompletar.disabled = false;
   }
 
   // ============================
@@ -144,25 +160,33 @@ async function init() {
   // ============================
   btnCompletar.addEventListener("click", async () => {
     if (!leccionActual) return;
-    const res = await marcarLeccionCompletada(id_usuario, leccionActual.id_curso, leccionActual.id_leccion);
-    if (res.exito) {
+
+    if (btnCompletar.textContent === "Completar Lección") {
+      const res = await marcarLeccionCompletada(id_usuario, leccionActual.id_curso, leccionActual.id_leccion);
+      if (res.exito) {
+        // Actualizar progreso
+        await calcularProgreso(id_usuario, leccionActual.id_curso, true);        
+      } else {
+        console.log("La petición NO fue exitosa.")
+        mostrarModal({
+          titulo: "⚠️ Error",
+          mensaje: res.mensaje || "No se pudo actualizar el progreso.",
+          tipo: "error",
+          boton: "Cerrar",
+        });
+      }
+    }
+
+    // Cargar siguiente lección o evaluación
+    if (leccionActual.id_leccion != lecciones[lecciones.length-1]["id_leccion"]) {
+      await cargarLeccion (leccionActual.id_leccion+1)
+    } else if (progresoTexto == 100) {
       mostrarModal({
-        titulo: "✅ Éxito",
-        mensaje: res.mensaje,
-        tipo: "success",
-        boton: "Aceptar",
-      });
-
-      // Actualizar progreso
-      actualizarProgreso(id_usuario, leccionActual.id_curso);
-
+        titulo:"⚠️ Error",
+        mensaje: "Funcionalidad de evaluación actualmente en progreso.",
+      })
     } else {
-      mostrarModal({
-        titulo: "⚠️ Error",
-        mensaje: res.mensaje || "No se pudo actualizar el progreso.",
-        tipo: "error",
-        boton: "Cerrar",
-      });
+      cargarLeccion (leccionActual.id_leccion)
     }
   });
 }

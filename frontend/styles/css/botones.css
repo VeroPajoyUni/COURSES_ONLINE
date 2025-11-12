@@ -65,6 +65,19 @@
   transition: var(--transicion);
 }
 
+.btn-leccion-completada-deshabilitar {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--color-acento2) 0%, var(--color-acento3) 100%);
+  color: var(--color-gris-deshabilitado);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
 .btn-compartir {
   background: white;
   color: var(--color-primario);
