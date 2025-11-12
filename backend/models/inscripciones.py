@@ -52,13 +52,14 @@ class Inscripciones:
 
         consulta = """
             INSERT INTO inscripciones (fecha_inscripcion, id_usuario, id_curso, id_estado)
-            VALUES (CURDATE(), 0, %s, %s, %s)
+            VALUES (CURDATE(), %s, %s, %s)
         """
         try:
             self.db.ejecutar(consulta, (id_usuario, id_curso, id_estado_inscrito))
             self.db.confirmar()
             return {"exito": True, "mensaje": "Inscripción realizada correctamente."}
         except Exception as e:
+            self.db.connection.rollback()  # Hacer rollback en caso de error
             return {"exito": False, "mensaje": f"Error al inscribir usuario: {e}"}
     
     def listar_por_usuario(self, id_usuario):

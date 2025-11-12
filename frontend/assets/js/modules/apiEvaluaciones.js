@@ -15,6 +15,16 @@ export async function listarEvaluacionesPorLeccion(id_leccion) {
 }
 
 /**
+ * Obtiene el detalle completo de una evaluación incluyendo sus preguntas y respuestas.
+ * Retorna { exito, data: { id_evaluacion, tipo_evaluacion, preguntas: [...] }, mensaje }.
+ */
+export async function obtenerDetalleEvaluacion(id_evaluacion) {
+  const response = await fetchJSON(`${API_URL}/evaluaciones/${id_evaluacion}`);
+  console.log("[Evaluaciones] Detalle de evaluación obtenido:", response);
+  return response;
+}
+
+/**
  * Guarda la calificación del usuario para una evaluación específica.
  * Envía { id_usuario, id_evaluacion, calificacion } mediante POST.
  * Retorna { exito, data, mensaje }.

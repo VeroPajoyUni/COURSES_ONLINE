@@ -14,19 +14,28 @@ class Progresos:
             WHERE id_usuario = %s AND id_curso = %s AND id_leccion = %s;
         """
         self.db.ejecutar(consulta, (id_usuario, id_curso, id_leccion))
-        resp = self.db.obtener_todos()
+        resp = self.db.obtener_uno()
         print("[DeBug]: Consulta de validación ejecutada.", resp)
-        return resp
+        # Retorna True si existe un registro, False si no existe
+        return resp is not None
     
-    def leccion_completada (self, id_usuario, id_curso, id_leccion):
+    def leccion_completada(self, id_usuario, id_curso, id_leccion):
         consulta = """
             INSERT INTO progresos (id_usuario, id_curso, id_leccion, leccion_completada)
             VALUES (%s, %s, %s, %s)
         """
-        print("[DeBug]: Bandera antes de ejecutar la consulta de lección completada.")
-        self.db.ejecutar(consulta, (id_usuario, id_curso, id_leccion, 1))
-        print("[DeBug]: Consulta de lección completada ejecutada.")
-        return self.db.obtener_todos()
+        try:
+            print("[DeBug]: Bandera antes de ejecutar la consulta de lección completada.")
+            print(f"[DeBug]: Datos a insertar - Usuario: {id_usuario}, Curso: {id_curso}, Lección: {id_leccion}")
+            self.db.ejecutar(consulta, (id_usuario, id_curso, id_leccion, 1))
+            # Hacer commit explícito para asegurar que se guarde
+            self.db.confirmar()
+            print("[DeBug]: Consulta de lección completada ejecutada y confirmada.")
+            return True
+        except Exception as e:
+            print(f"[DeBug]: Error al insertar progreso: {e}")
+            self.db.connection.rollback()  # Hacer rollback en caso de error
+            raise e
     
     def obtener_lecciones_completadas(self, id_usuario, id_curso):
         print("[Debug]: Obteniendo lecciones completadas para el usuario:", id_usuario, "en el curso:", id_curso)

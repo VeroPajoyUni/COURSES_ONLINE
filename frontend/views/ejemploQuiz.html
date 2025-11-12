@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo Quiz - OpenMind</title>
+  <link rel="stylesheet" href="../styles/css/main.css">
+  <link rel="stylesheet" href="../styles/css/quizLeccion.css">
+</head>
+<body>
+  <div id="header-container"></div>
+
+  <main style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h1>Ejemplo de Quiz Interactivo</h1>
+    <p>Haz clic en el botón para presentar el quiz de 5 preguntas de verdadero/falso.</p>
+    
+    <!-- Incluir el componente del quiz -->
+    <div id="quiz-container">
+      <!-- El botón y modal se cargan desde quizLeccion.html -->
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Cargar el HTML del quiz -->
+  <script type="module">
+    import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
+    await loadHeaderFooter();
+
+    // Cargar el HTML del quiz
+    const response = await fetch("../views/quizLeccion.html");
+    const html = await response.text();
+    document.getElementById("quiz-container").innerHTML = html;
+
+    // Cargar el controlador del quiz
+    await import("../controllers/quizLeccionController.js");
+  </script>
+</body>
+</html>
+

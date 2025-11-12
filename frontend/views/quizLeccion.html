@@ -1,15 +1,49 @@
-<!-- Modal para presentar el quiz -->
-<div id="quiz-modal" class="modal">
-  <div class="modal-content">
-    <h2>Quiz de la Lección</h2>
-    <div id="pregunta-container"></div>
+<!-- Botón para presentar el quiz -->
+<button id="btn-presentar-quiz" class="btn-presentar-quiz">
+  🧠 Presentar Quiz
+</button>
 
-    <div class="botones">
-      <button id="btn-anterior">Anterior</button>
-      <button id="btn-siguiente">Siguiente</button>
+<!-- Modal para presentar el quiz -->
+<div id="quiz-modal" class="quiz-modal">
+  <div class="quiz-modal-content">
+    <!-- Header del modal -->
+    <div class="quiz-header">
+      <h2 class="quiz-title">🧠 Quiz de la Lección</h2>
+      <button class="quiz-close-btn" id="btn-cerrar-modal" aria-label="Cerrar">×</button>
     </div>
 
-    <div id="resultado" style="display:none; margin-top: 1rem;"></div>
-    <button id="btn-cerrar" style="display:none;">Cerrar</button>
+    <!-- Indicador de progreso -->
+    <div class="quiz-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <span class="progress-text" id="progress-text">Pregunta 1 de 5</span>
+    </div>
+
+    <!-- Contenedor de preguntas -->
+    <div class="quiz-body">
+      <div id="pregunta-container" class="pregunta-container"></div>
+    </div>
+
+    <!-- Botones de navegación -->
+    <div class="quiz-actions">
+      <button id="btn-anterior" class="btn-quiz btn-quiz-secondary" disabled>
+        ← Anterior
+      </button>
+      <button id="btn-siguiente" class="btn-quiz btn-quiz-primary">
+        Siguiente →
+      </button>
+      <button id="btn-finalizar" class="btn-quiz btn-quiz-success" style="display: none;">
+        Finalizar Quiz ✓
+      </button>
+    </div>
+
+    <!-- Resultado del quiz -->
+    <div id="resultado" class="quiz-resultado" style="display: none;"></div>
+    
+    <!-- Botón de cierre final -->
+    <div class="quiz-footer" style="display: none;">
+      <button id="btn-cerrar" class="btn-quiz btn-quiz-primary">Cerrar</button>
+    </div>
   </div>
 </div>

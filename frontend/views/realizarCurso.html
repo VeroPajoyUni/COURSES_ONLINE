@@ -5,6 +5,7 @@
   <title>Realizar Curso - OpenMind</title>
   <link rel="stylesheet" href="../styles/css/main.css">
   <link rel="stylesheet" href="../styles/css/realizarCurso.css">
+  <link rel="stylesheet" href="../styles/css/quizLeccion.css">
 </head>
 <body>
   <div id="header-container"></div>
@@ -40,10 +41,7 @@
            CONTENEDOR DE QUIZZES
       ======================== -->
       <div id="quizContainer" class="quiz-container" hidden>
-        <h4>Quiz de esta lección</h4>
-        <form id="quizForm"></form>
-        <div id="quizFeedback" class="feedback"></div>
-        <button id="btnEnviarQuiz" class="btn-accion">Enviar Quiz</button>
+        <!-- El botón y modal se cargarán aquí dinámicamente -->
       </div>
 
       <!-- =======================
@@ -64,11 +62,15 @@
 
   <div id="footer-container"></div>
 
+  <!-- Modal del Quiz (se carga dinámicamente) -->
+  <div id="quiz-modal-container"></div>
+
   <script type="module">
     import { loadHeaderFooter } from "../controllers/utils/loadComponents.js";
     await loadHeaderFooter();
   </script>
 
   <script type="module" src="../controllers/realizarCursoController.js"></script>
+  <script type="module" src="../controllers/quizLeccionController.js"></script>
 </body>
 </html>
