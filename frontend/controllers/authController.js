@@ -1,73 +1,137 @@
+/**
+ * ==========================================
+ * Controlador de Autenticación (Login)
+ * Archivo: authController.js
+ * Proyecto: OpenMind
+ * Descripción:
+ *   Gestiona la lógica del inicio de sesión de los usuarios,
+ *   incluyendo validaciones de entrada, conexión con la API,
+ *   manejo de sesión y visualización de mensajes en pantalla.
+ * ==========================================
+ */
+
 import { login } from "../assets/js/api.js";
 import { SessionManager } from "../controllers/utils/sessionManager.js";
 
-// ==========================
-// Validaciones de seguridad
-// ==========================
-// Expresiones regulares para validar correo y contraseña
+/* ============================================================
+ *  Validaciones y configuración inicial
+ * ============================================================ */
+
+/**
+ * Expresión regular para validar el formato del correo electrónico.
+ * Asegura que tenga un usuario, un dominio y una extensión válida.
+ */
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// ==========================
-// Mostrar/ocultar contraseña
-// ==========================
+/* ============================================================
+ *  Mostrar / Ocultar contraseña
+ * ============================================================ */
+
+/**
+ * Permite alternar la visibilidad del campo de contraseña
+ * (mostrar texto o mantenerlo oculto con asteriscos).
+ */
 const togglePassword = document.getElementById("togglePassword");
 const inputPassword = document.getElementById("contrasenia");
+
 if (togglePassword && inputPassword) {
   togglePassword.addEventListener("click", () => {
+    // Cambia el tipo de input entre "password" y "text"
     const type = inputPassword.type === "password" ? "text" : "password";
     inputPassword.type = type;
+
+    // Cambia el ícono visual según el estado
     togglePassword.textContent = type === "password" ? "👁️" : "🙈";
   });
 }
 
-// ==========================
-// Manejo del envío del formulario de login
-// ==========================
+/* ============================================================
+ *  Manejador del formulario de inicio de sesión
+ * ============================================================ */
+
+/**
+ * Captura el evento "submit" del formulario de login y ejecuta
+ * las validaciones correspondientes antes de llamar a la API.
+ */
 document.getElementById("login-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Evita el envío tradicional del formulario
 
   const correo = document.getElementById("correo").value.trim();
   const contrasenia = document.getElementById("contrasenia").value.trim();
-  const mensajeError = document.getElementById("mensaje-error");
-  mensajeError.style.display = "none";
 
-  // Validaciones de campos
+  // ------------------------------
+  // Validaciones básicas del formulario
+  // ------------------------------
   if (!correo || !contrasenia) {
-    mostrarError("Por favor, completa todos los campos");
-    return;
-  }
-  if (!emailRegex.test(correo)) {
-    mostrarError("Formato de correo electrónico no válido");
+    mostrarMensaje("Por favor, completa todos los campos", "error");
     return;
   }
 
-  // ==========================
-  // Llamada a la API de login
-  // ==========================
+  if (!emailRegex.test(correo)) {
+    mostrarMensaje("Formato de correo electrónico no válido", "error");
+    return;
+  }
+
+  // ------------------------------
+  // Llamada al backend para autenticación
+  // ------------------------------
   const respuesta = await login(correo, contrasenia);
 
-  // ==========================
-  // Manejo de la respuesta normalizada
-  // ==========================
+  // ------------------------------
+  // Manejo de respuesta de la API
+  // ------------------------------
   if (respuesta.exito) {
     /**
-     * El backend devuelve la estructura: { exito, mensaje, usuario }
+     * Estructura esperada del backend:
+     * { exito: true, mensaje: string, data: { ...usuario } }
      */
     const usuario = respuesta.data;
 
-    // Guarda el usuario correctamente en la sesión
+    // Guarda los datos del usuario autenticado en sesión
     SessionManager.guardarUsuario(usuario);
-    window.location.href = "./index.html";
+
+    // Muestra mensaje de éxito y redirige tras unos segundos
+    mostrarMensaje("Inicio de sesión exitoso, redirigiendo...", "exito");
+    setTimeout(() => {
+      window.location.href = "./index.html";
+    }, 2000);
   } else {
-    mostrarError(respuesta.mensaje || "Credenciales incorrectas, intenta nuevamente.");
+    // Muestra mensaje de error genérico o el proporcionado por el backend
+    mostrarMensaje(respuesta.mensaje || "Credenciales incorrectas, intenta nuevamente.", "error");
   }
 });
 
-// ==========================
-// Función auxiliar para mostrar errores
-// ==========================
-function mostrarError(mensaje) {
-  const mensajeError = document.getElementById("mensaje-error");
-  mensajeError.textContent = mensaje;
-  mensajeError.style.display = "block";
+/* ============================================================
+ *  Función auxiliar para mostrar mensajes en pantalla
+ * ============================================================ */
+
+/**
+ * Muestra mensajes de éxito o error en el formulario.
+ * 
+ * @param {string} texto - Contenido del mensaje a mostrar.
+ * @param {"exito"|"error"} tipo - Define el estilo del mensaje.
+ * 
+ * Funcionalidad:
+ * - Inserta el texto en el contenedor #mensaje.
+ * - Aplica clases CSS para cambiar color y formato.
+ * - Oculta automáticamente los mensajes de error tras 5 segundos.
+ */
+function mostrarMensaje(texto, tipo) {
+  const mensaje = document.getElementById("mensaje");
+
+  // Establece el texto del mensaje
+  mensaje.textContent = texto;
+
+  // Aplica las clases dinámicas para los estilos (CSS)
+  mensaje.className = `mensaje mensaje-${tipo}`;
+
+  // Hace visible el contenedor del mensaje
+  mensaje.style.display = "block";
+
+  // Los mensajes de error desaparecen automáticamente
+  if (tipo === "error") {
+    setTimeout(() => {
+      mensaje.style.display = "none";
+    }, 5000);
+  }
 }
