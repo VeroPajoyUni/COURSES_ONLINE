@@ -152,12 +152,9 @@ class ServidorBasico(BaseHTTPRequestHandler):
             id_curso = datos.get("id_curso")
             id_leccion = datos.get("id_leccion")
 
-        # TODO: EndPoint para obtener lecciones completadas para un usuario en un curso
         elif ruta == "/api/leccion/completadas":
-            print(f"[DeBug]: Dentro del servidor POST /api/leccion/completadas")
             id_usuario = datos.get("id_usuario")
             id_curso = datos.get("id_curso")
-            print(f"[DeBug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}")
             respuesta = ProgresoController().obtener_lecciones_completadas(id_usuario=id_usuario, id_curso=id_curso)
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)
@@ -193,11 +190,9 @@ class ServidorBasico(BaseHTTPRequestHandler):
             self._enviar_respuesta(codigo, respuesta)
 
         elif ruta == "/api/leccion/completar_leccion":
-            print("[DeBug]: Dentro del servidor PUT /api/leccion/completar_leccion")
             id_usuario = datos.get("id_usuario")
             id_curso = datos.get("id_curso")
             id_leccion = datos.get("id_leccion")
-            print(f"[Debug]: Datos recibidos: \n Usuario: {id_usuario}\n Curso: {id_curso}\n Leccion: {id_leccion}")
             respuesta = ProgresoController().marcar_leccion_completada(id_usuario=id_usuario, id_curso=id_curso, id_leccion=id_leccion)
             codigo = 200 if respuesta["exito"] else 400
             self._enviar_respuesta(codigo, respuesta)

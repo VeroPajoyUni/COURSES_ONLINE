@@ -4,11 +4,12 @@
   --color-secundario: #000000;
   --color-acento: #272727;
   --color-acento2: #e4e4e4;
-  --color-acento3: #9fbad3;
+  --color-acento3: #93bbe0;
   --color-fondo: #f9fafb;
   --color-texto: #1f2937;
   --color-blanco: #ffffff;
   --color-gris: #6b7280;
+  --color-gris-deshabilitado: #545b69;
 
   /* 🌈 Estado */
   --color-error: #d32f2f;

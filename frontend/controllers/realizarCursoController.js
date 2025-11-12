@@ -1,7 +1,5 @@
 import {
   listarLeccionesPorCurso,
-  listarEvaluacionesPorLeccion,
-  guardarCalificacion,
   marcarLeccionCompletada,
   leccionesCompletadas,
   obtenerInscripcionesUsuario
@@ -11,9 +9,9 @@ import { SessionManager } from "../controllers/utils/sessionManager.js";
 import { mostrarModal } from "../controllers/utils/modalAlertsController.js";
 
 // ============================
-// Función principal
+// INICIALIZACIÓN
 // ============================
-async function cargarRealizarCurso() {
+async function init() {
   const params = new URLSearchParams(window.location.search);
   const cursoId = parseInt(params.get("id"));
   const usuario = SessionManager.obtenerUsuario();
@@ -33,16 +31,12 @@ async function cargarRealizarCurso() {
   // Referencias al DOM
   const sidebar = document.querySelector("#listaLecciones");
   const contenido = document.querySelector("#contenidoLeccion");
-  const quizContainer = document.querySelector("#quizContainer");
   const btnCompletar = document.querySelector("#btnCompletarLeccion");
   const progresoBarra = document.querySelector("#progreso");
   const progresoTexto = document.querySelector("#progresoTexto");
-  const mensajeUsuario = document.querySelector("#mensajeUsuario");
 
   let lecciones = [];
   let leccionActual = null;
-  let evaluacionActual = null;
-  let quizCompletado = false;
   let id_inscripcion = null;
 
   // ============================
@@ -97,8 +91,26 @@ async function cargarRealizarCurso() {
       .join("");
 
     sidebar.querySelectorAll("li").forEach((li) => {
-      li.addEventListener("click", () => cargarLeccion(li.dataset.id));
+      li.addEventListener("click", async () => await cargarLeccion(li.dataset.id));
     });
+  }
+
+  // Cargar la primera lección por defecto y el progreso actual
+  if (lecciones.length > 0) {
+    await cargarLeccion(lecciones[0].id_leccion);
+    await calcularProgreso(id_usuario, leccionActual.id_curso, true);
+  }
+
+  async function calcularProgreso(id_usuario, id_curso, actualizacion) {
+    const resp = await leccionesCompletadas(id_usuario, id_curso);
+    const lecCompletadas = resp.data.length
+    const totalLecciones = lecciones.length;
+    const progreso = Math.round((lecCompletadas / totalLecciones) * 100);
+    if (!actualizacion) {
+      return progreso
+    }
+    progresoBarra.value = progreso;
+    progresoTexto.textContent = `${progreso}%`;
   }
 
   // ============================
@@ -109,9 +121,6 @@ async function cargarRealizarCurso() {
     if (!leccion) return;
 
     leccionActual = leccion;
-    quizCompletado = false;
-    btnCompletar.disabled = true;
-    mensajeUsuario.hidden = true;
 
     contenido.innerHTML = `
       <h2>${leccion.titulo_leccion}</h2>
@@ -126,127 +135,24 @@ async function cargarRealizarCurso() {
         }
       </div>
     `;
-
-    const evaluaciones = await listarEvaluacionesPorLeccion(id_leccion);
-    console.log("Evaluaciones obtenidas por lección:", evaluaciones);
-
-    if (!evaluaciones.exito || evaluaciones.data.length === 0) {
-      quizContainer.hidden = false;
-      quizContainer.innerHTML = "<p>Esta lección no tiene evaluación asociada.</p>";
-      quizCompletado = true;
-      btnCompletar.disabled = false;
-      return;
-    }
-
-    const evaluacionQuiz = evaluaciones.data.find(
-      (e) => e.tipo_evaluacion.toLowerCase() === "quiz"
-    );
-    const evaluacionFinal = evaluaciones.data.find(
-      (e) => e.tipo_evaluacion.toLowerCase() === "evaluación final"
-    );
-
-    evaluacionActual = evaluacionQuiz || evaluacionFinal;
-
-    if (evaluacionActual && evaluacionActual.preguntas?.length > 0) {
-      renderEvaluacion(evaluacionActual);
-    } else {
-      quizContainer.hidden = false;
-      quizContainer.innerHTML = "<p>La evaluación no tiene preguntas configuradas.</p>";
-      btnCompletar.disabled = false;
-    }
-  }
-
-  // ============================
-  // Renderizar evaluación (quiz)
-  // ============================
-  function renderEvaluacion(evaluacion) {
-    const preguntas = evaluacion.preguntas || [];
-    if (preguntas.length === 0) {
-      quizContainer.innerHTML = "<p>Esta evaluación no tiene preguntas configuradas.</p>";
-      btnCompletar.disabled = false;
-      return;
-    }
-
-    quizContainer.hidden = false;
-    quizContainer.innerHTML = `
-      <h3>🧠 ${
-        evaluacion.tipo_evaluacion === "Quiz"
-          ? "Quiz de la lección"
-          : "Evaluación Final"
-      }</h3>
-      <form id="quizForm">
-        ${preguntas
-          .map(
-            (p, i) => `
-          <div class="pregunta">
-            <p><strong>${i + 1}. ${p.pregunta}</strong></p>
-            ${p.respuestas
-              .map(
-                (r) => `
-              <label>
-                <input type="radio" name="pregunta_${p.id_preguntas}" value="${r.id_respuesta}">
-                ${r.opciones}
-              </label>
-            `
-              )
-              .join("")}
-          </div>
-        `
-          )
-          .join("")}
-        <button type="submit" class="btn-accion">Enviar respuestas</button>
-      </form>
-    `;
-
-    const form = document.querySelector("#quizForm");
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const resultado = verificarRespuestas(preguntas);
-      const payload = {
-        id_usuario,
-        id_evaluacion: evaluacion.id_evaluacion,
-        calificacion: resultado.calificacion,
-      };
-
-      const res = await guardarCalificacion(payload);
-      if (res.exito) {
-        quizCompletado = true;
-        btnCompletar.disabled = false;
-
-        mostrarModal({
-          titulo: "Evaluación completada",
-          mensaje: `Has completado el ${evaluacion.tipo_evaluacion.toLowerCase()}. Calificación: ${resultado.calificacion.toFixed(2)}%`,
-          tipo: "success",
-          boton: "Continuar",
-        });
+    // Identificar si la lección ya se encuentra completada o no.
+    btnCompletar.className = "btn-leccion-completada"
+    btnCompletar.disable = false;
+    btnCompletar.style.pointerEvents = "auto";
+    if ((await leccionesCompletadas(id_usuario, leccionActual.id_curso)).data.some(item => item.id_leccion === leccionActual.id_leccion)){
+      if (leccion.id_leccion === lecciones[lecciones.length-1]["id_leccion"]){
+        btnCompletar.innerHTML = "Realizar Evaluación"
+        if (progresoTexto.textContent != "100%"){
+          btnCompletar.className = "btn-leccion-completada-deshabilitar"
+          btnCompletar.disable = true;
+          btnCompletar.style.pointerEvents = "none";
+        }
       } else {
-        mostrarModal({
-          titulo: "Error al guardar calificación",
-          mensaje: res.mensaje || "No se pudo registrar la calificación.",
-          tipo: "error",
-          boton: "Cerrar",
-        });
+        btnCompletar.innerHTML = "Siguiente Lección"
       }
-    });
-  }
-
-  // ============================
-  // Verificar respuestas y calificar
-  // ============================
-  function verificarRespuestas(preguntas) {
-    let correctas = 0;
-    preguntas.forEach((p) => {
-      const seleccionada = document.querySelector(
-        `input[name="pregunta_${p.id_preguntas}"]:checked`
-      )?.value;
-      const correcta = p.respuestas.find(
-        (r) => r.es_correcta === "1" || r.es_correcta === 1 || r.es_correcta === true
-      );
-      if (seleccionada == correcta?.id_respuesta) correctas++;
-    });
-    const total = preguntas.length;
-    const calificacion = (correctas / total) * 100;
-    return { correctas, total, calificacion };
+    } else {
+      btnCompletar.innerHTML = "Completar Lección"
+    }
   }
 
   // ============================
@@ -254,32 +160,33 @@ async function cargarRealizarCurso() {
   // ============================
   btnCompletar.addEventListener("click", async () => {
     if (!leccionActual) return;
-    const res = await marcarLeccionCompletada(id_usuario, leccionActual.id_curso, leccionActual.id_leccion);
-    if (res.exito) {
-      mostrarModal({
-        titulo: "✅ Éxito",
-        mensaje: res.mensaje,
-        tipo: "success",
-        boton: "Aceptar",
-      });
-      
-      // Actualizar progreso
-      const resp = await leccionesCompletadas(id_usuario, leccionActual.id_curso);
-      console.log("Lección actual:", leccionActual);
-      const lecCompletadas = resp.data.length
-      const totalLecciones = lecciones.length;
-      const progreso = Math.round((lecCompletadas / totalLecciones) * 100);
-      progresoBarra.value = progreso;
-      progresoTexto.textContent = `${progreso}%`;
-      console.log("[DeBug] Lecciones completadas:", lecCompletadas, "de", totalLecciones);
 
-    } else {
+    if (btnCompletar.textContent === "Completar Lección") {
+      const res = await marcarLeccionCompletada(id_usuario, leccionActual.id_curso, leccionActual.id_leccion);
+      if (res.exito) {
+        // Actualizar progreso
+        await calcularProgreso(id_usuario, leccionActual.id_curso, true);        
+      } else {
+        console.log("La petición NO fue exitosa.")
+        mostrarModal({
+          titulo: "⚠️ Error",
+          mensaje: res.mensaje || "No se pudo actualizar el progreso.",
+          tipo: "error",
+          boton: "Cerrar",
+        });
+      }
+    }
+
+    // Cargar siguiente lección o evaluación
+    if (leccionActual.id_leccion != lecciones[lecciones.length-1]["id_leccion"]) {
+      await cargarLeccion (leccionActual.id_leccion+1)
+    } else if (progresoTexto.textContent == "100%") {
       mostrarModal({
-        titulo: "⚠️ Error",
-        mensaje: res.mensaje || "No se pudo actualizar el progreso.",
-        tipo: "error",
-        boton: "Cerrar",
-      });
+        titulo:"⚠️ Error",
+        mensaje: "Funcionalidad de evaluación actualmente en progreso.",
+      })
+    } else {
+      cargarLeccion (leccionActual.id_leccion)
     }
   });
 }
@@ -287,4 +194,4 @@ async function cargarRealizarCurso() {
 // ============================
 // Inicialización
 // ============================
-window.addEventListener("DOMContentLoaded", cargarRealizarCurso);
+window.addEventListener("DOMContentLoaded", init);

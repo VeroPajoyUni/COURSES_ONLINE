@@ -15,7 +15,8 @@ class AuthController:
 
         try:
             usuario = self.auth.verificar_credenciales(correo, contrasenia)
-            print("[DeBug]: Usuario autenticado:", usuario)
+            if usuario == None:
+                return manejar_error("Credenciales invalidas")
             return manejar_exito(usuario, "Inicio de sesión exitoso")
         except Exception as e:
             return manejar_error(e, "Correo o contraseña incorrectos")
