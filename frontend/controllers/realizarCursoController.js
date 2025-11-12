@@ -142,7 +142,7 @@ async function init() {
     if ((await leccionesCompletadas(id_usuario, leccionActual.id_curso)).data.some(item => item.id_leccion === leccionActual.id_leccion)){
       if (leccion.id_leccion === lecciones[lecciones.length-1]["id_leccion"]){
         btnCompletar.innerHTML = "Realizar Evaluación"
-        if (progresoTexto!=100){
+        if (progresoTexto.textContent != "100%"){
           btnCompletar.className = "btn-leccion-completada-deshabilitar"
           btnCompletar.disable = true;
           btnCompletar.style.pointerEvents = "none";
@@ -180,7 +180,7 @@ async function init() {
     // Cargar siguiente lección o evaluación
     if (leccionActual.id_leccion != lecciones[lecciones.length-1]["id_leccion"]) {
       await cargarLeccion (leccionActual.id_leccion+1)
-    } else if (progresoTexto == 100) {
+    } else if (progresoTexto.textContent == "100%") {
       mostrarModal({
         titulo:"⚠️ Error",
         mensaje: "Funcionalidad de evaluación actualmente en progreso.",

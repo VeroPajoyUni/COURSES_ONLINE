@@ -12,7 +12,6 @@ export async function login(correo, contrasenia) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ correo, contrasenia }),
     });
-
     const data = await response.json().catch(() => ({}));
 
     // Si el backend respondió con error HTTP
@@ -26,7 +25,7 @@ export async function login(correo, contrasenia) {
     // Si el backend responde correctamente
     if (data.exito && data.data) {
       sessionStorage.setItem("usuario", JSON.stringify(data.data.usuario));
-      console.log("Login exitoso:", data.data.usuario);
+      // console.log("Login exitoso:", data.data.usuario);
     }
 
     return data;
