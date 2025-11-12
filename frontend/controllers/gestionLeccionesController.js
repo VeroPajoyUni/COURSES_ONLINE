@@ -86,10 +86,11 @@ function renderTabla(lecciones) {
       <tr data-id="${l.id_leccion}">
         <td>${l.titulo_leccion}</td>
         <td>${l.descripcion_leccion}</td>
+        <td>${l.contenido_leccion}</td>
         <td class="acciones">
           <button class="btn-accion btn-editar">Editar</button>
           <button class="btn-accion btn-eliminar">Eliminar</button>
-          <a class="btn-accion btn-gestionar" href="gestionQuizzes.html?id=${l.id_leccion}">Quizzes</a>
+          <a class="btn-accion btn-gestionar" href="#?id=${l.id_leccion}">Quizzes</a>
         </td>
       </tr>`
     )
@@ -156,6 +157,7 @@ function obtenerDatosFormulario() {
   return {
     titulo_leccion: form.leccionTitulo.value.trim(),
     descripcion_leccion: form.leccionDescripcion.value.trim(),
+    contenido_leccion: form.leccionContenido.value.trim(),
   };
 }
 
@@ -180,6 +182,7 @@ async function abrirModalEditar(id) {
   modalTitulo.textContent = "✏️ Editar Lección";
   form.leccionTitulo.value = leccion.titulo_leccion;
   form.leccionDescripcion.value = leccion.descripcion_leccion;
+  form.leccionContenido.value = leccion.contenido_leccion;
   btnGuardar.disabled = false;
   modal.style.display = "flex";
 }
@@ -227,6 +230,7 @@ confirmNo.addEventListener("click", () => {
 function validarFormulario() {
   const titulo = form.leccionTitulo.value.trim();
   const descripcion = form.leccionDescripcion.value.trim();
+  const contenido = form.leccionContenido.value.trim();
   btnGuardar.disabled = !(titulo.length > 3 && descripcion.length >= 10);
 }
 

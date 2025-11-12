@@ -6,10 +6,10 @@
 // permitiendo importar todas las funciones relacionadas con la API
 // desde un único lugar. Por ejemplo, en un controlador se puede hacer:
 
-export * from "../../assets/js/modules/apiAutenticacion.js";
-export * from "../../assets/js/modules/apiRegistrarUsuario.js";
-export * from "../../assets/js/modules/apiCursos.js";
-export * from "../../assets/js/modules/apiLecciones.js";
-export * from "../../assets/js/modules/apiEvaluaciones.js";
-export * from "../../assets/js/modules/apiInscripciones.js";
-export * from "../../assets/js/modules/apiProgreso.js";
+export * from "./modules/apiAutenticacion.js"
+export * from "./modules/apiRegistrarUsuario.js";
+export * from "./modules/apiCursos.js";
+export * from "./modules/apiLecciones.js";
+export * from "./modules/apiEvaluaciones.js";
+export * from "./modules/apiInscripciones.js";
+export * from "./modules/apiProgreso.js";

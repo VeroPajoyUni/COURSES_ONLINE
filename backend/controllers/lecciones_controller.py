@@ -1,7 +1,6 @@
 from models.lecciones import Leccion
 from utils.response import manejar_exito, manejar_error, manejar_accion_exitosa
 
-
 class LeccionesController:
     def __init__(self):
         self.leccion = Leccion()

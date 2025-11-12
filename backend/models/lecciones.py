@@ -45,7 +45,7 @@ class Leccion:
     def crear(self, datos):
         consulta = """
             INSERT INTO lecciones (titulo_leccion, descripcion_leccion, contenido_leccion, id_curso)
-            VALUES (%s, %s, %s)
+            VALUES (%s, %s, %s, %s)
         """
         valores = (
             datos["titulo_leccion"],
@@ -74,7 +74,7 @@ class Leccion:
         consulta = """
             UPDATE lecciones
             SET titulo_leccion = %s,
-                descripcion_leccion = %s
+                descripcion_leccion = %s,
                 contenido_leccion = %s
             WHERE id_leccion = %s
         """
@@ -89,10 +89,29 @@ class Leccion:
         return {"sin_cambios": False}
 
     def eliminar(self, id_leccion):
-        # Eliminar evaluaciones y preguntas asociadas (en cascada manual)
-        self.db.ejecutar("DELETE FROM respuestas WHERE id_pregunta IN (SELECT id_preguntas FROM preguntas WHERE id_evaluacion IN (SELECT id_evaluacion FROM evaluaciones WHERE id_leccion = %s))", (id_leccion,))
-        self.db.ejecutar("DELETE FROM preguntas WHERE id_evaluacion IN (SELECT id_evaluacion FROM evaluaciones WHERE id_leccion = %s)", (id_leccion,))
+        """
+        Se elimina en cascada manual:
+        - respuestas -> preguntas -> evaluaciones -> lecciones
+        """
+        # # Eliminar respuestas asociadas a preguntas de evaluaciones de la lección
+        # self.db.ejecutar("""
+        #     DELETE r FROM respuestas r
+        #     JOIN preguntas p ON r.id_pregunta = p.id_pregunta
+        #     JOIN evaluaciones e ON p.id_evaluacion = e.id_evaluacion
+        #     WHERE e.id_leccion = %s
+        # """, (id_leccion,))
+
+        # # Eliminar preguntas asociadas a evaluaciones de la lección
+        # self.db.ejecutar("""
+        #     DELETE p FROM preguntas p
+        #     JOIN evaluaciones e ON p.id_evaluacion = e.id_evaluacion
+        #     WHERE e.id_leccion = %s
+        # """, (id_leccion,))
+
+        # Eliminar evaluaciones de la lección
         self.db.ejecutar("DELETE FROM evaluaciones WHERE id_leccion = %s", (id_leccion,))
+
+        # Finalmente eliminar la lección
         self.db.ejecutar("DELETE FROM lecciones WHERE id_leccion = %s", (id_leccion,))
         self.db.confirmar()
         return True

@@ -65,6 +65,32 @@
   transition: var(--transicion);
 }
 
+.barra-superior {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.btn-volver-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  background-image: url("../../assets/img/icons/volver.png");
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-volver-icon:hover {
+  transform: scale(1.1);
+  opacity: 0.85;
+}
+
 .btn-leccion-completada-deshabilitar {
   width: 100%;
   padding: 14px;

@@ -13,7 +13,12 @@
 
   <main>
     <section class="gestion-lecciones-container">
-      <h2>Gestión de lecciones</h2>
+      <div class="barra-superior">
+        <a href="gestionCursos.html">
+          <button id="btn-volver-icon" class="btn-volver-icon" title="Volver"></button>
+        </a>
+        <h2>Gestión de lecciones</h2>
+      </div>
 
       <div class="barra-acciones">
         <button id="btnNuevaLeccion" class="btn-agregar">+ Nueva lección</button>
@@ -25,6 +30,7 @@
             <tr>
               <th>Título</th>
               <th>Descripción</th>
+              <th>Contenido</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -47,6 +53,9 @@
 
         <label for="leccionDescripcion">Descripción</label>
         <textarea id="leccionDescripcion" name="descripcion" minlength="10" maxlength="255" required></textarea>
+
+        <label for="leccionContenido">Contenido</label>
+        <textarea id="leccionContenido" name="contenido" minlength="10" maxlength="255" required></textarea>
 
         <div class="modal-actions">
           <button type="button" id="btnCerrarModalLeccion" class="modal-btn">Cerrar</button>
