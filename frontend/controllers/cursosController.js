@@ -1,11 +1,38 @@
+/**
+ * Controlador de cursos (cursoController.js)
+ * ------------------------------------------
+ * Este módulo gestiona la visualización y filtrado de los cursos disponibles
+ * en la plataforma. Se encarga de comunicarse con la API para obtener los datos,
+ * mostrar las tarjetas de los cursos en la interfaz, y aplicar filtros dinámicos
+ * por texto o categoría.
+ * 
+ * Funcionalidades principales:
+ *  - Cargar los cursos y las categorías desde la API.
+ *  - Renderizar los cursos dinámicamente en el DOM.
+ *  - Implementar filtros de búsqueda por nombre, descripción y categoría.
+ *  - Formatear las fechas de los cursos para mostrarlas en formato legible.
+ */
+
 import { getCursos, getCategorias } from "../assets/js/api.js";
 
-// Variables globales para almacenar los datos
+// ============================
+// VARIABLES GLOBALES
+// ============================
+
+/**
+ * @type {Array} todosLosCursos - Lista completa de cursos obtenidos desde la API.
+ * @type {Array} categorias - Lista de categorías disponibles.
+ */
 let todosLosCursos = [];
 let categorias = [];
 
+// ============================
+// FUNCIÓN PRINCIPAL DE INICIO
+// ============================
+
 /**
- * Carga inicial: obtiene cursos y categorías, luego renderiza
+ * Carga inicial: obtiene los datos de cursos y categorías,
+ * configura los filtros y renderiza la interfaz.
  */
 async function inicializar() {
   await cargarDatos();
@@ -13,17 +40,25 @@ async function inicializar() {
   renderizarCursos(todosLosCursos);
 }
 
+// ============================
+// FUNCIONES DE CARGA DE DATOS
+// ============================
+
 /**
- * Obtiene cursos y categorías desde la API
+ * Obtiene los cursos y categorías desde la API.
+ * 
+ * - Llama a las funciones getCursos() y getCategorias().
+ * - Si la respuesta es exitosa, almacena los datos en variables globales.
+ * - Carga las opciones de categoría en el menú desplegable.
  */
 async function cargarDatos() {
-  // Obtener cursos
+  // Obtener cursos desde la API
   const respuestaCursos = await getCursos();
   if (respuestaCursos.exito && respuestaCursos.data) {
     todosLosCursos = respuestaCursos.data;
   }
 
-  // Obtener categorías
+  // Obtener categorías desde la API
   const respuestaCategorias = await getCategorias();
   if (respuestaCategorias.exito && respuestaCategorias.data) {
     categorias = respuestaCategorias.data;
@@ -32,7 +67,7 @@ async function cargarDatos() {
 }
 
 /**
- * Carga las opciones del select de categorías
+ * Carga las opciones de categorías dentro del <select> de filtrado.
  */
 function cargarOpcionesCategorias() {
   const selectCategoria = document.getElementById("filter-categoria");
@@ -46,8 +81,15 @@ function cargarOpcionesCategorias() {
   });
 }
 
+// ============================
+// CONFIGURACIÓN DE FILTROS
+// ============================
+
 /**
- * Configura los eventos de los filtros
+ * Configura los eventos de filtrado en los elementos del DOM.
+ * 
+ * - Filtro de búsqueda por texto.
+ * - Filtro por categoría seleccionada.
  */
 function configurarFiltros() {
   const searchInput = document.getElementById("search-input");
@@ -63,7 +105,11 @@ function configurarFiltros() {
 }
 
 /**
- * Aplica todos los filtros activos y actualiza la vista
+ * Aplica los filtros activos (texto y categoría) sobre la lista de cursos.
+ * 
+ * - Filtra por coincidencia en el título o descripción.
+ * - Filtra por categoría seleccionada.
+ * - Actualiza la visualización de los cursos.
  */
 function aplicarFiltros() {
   const textoBusqueda = document.getElementById("search-input")?.value.toLowerCase() || "";
@@ -90,20 +136,26 @@ function aplicarFiltros() {
   renderizarCursos(cursosFiltrados);
 }
 
+// ============================
+// RENDERIZACIÓN DE CURSOS
+// ============================
+
 /**
- * Renderiza las tarjetas de cursos en el DOM
+ * Renderiza la lista de cursos en formato de tarjetas dentro del contenedor principal.
+ * 
+ * @param {Array} cursos - Lista de cursos a mostrar.
  */
 function renderizarCursos(cursos) {
   const contenedor = document.getElementById("cursos-container");
   if (!contenedor) return;
 
-  // Si no hay cursos, mostrar mensaje
+  // Si no hay cursos, mostrar mensaje informativo
   if (!cursos || cursos.length === 0) {
     contenedor.innerHTML = '<p class="no-results">Ups, este curso aún no existe</p>';
     return;
   }
 
-  // Renderizar tarjetas
+  // Generar las tarjetas de los cursos
   contenedor.innerHTML = cursos.map(curso => `
     <div class="card">
       <div>
@@ -121,8 +173,17 @@ function renderizarCursos(cursos) {
   `).join("");
 }
 
+// ============================
+// UTILIDADES
+// ============================
+
 /**
- * Formatea una fecha en formato corto legible (dd de mes de yyyy)
+ * Formatea una fecha para mostrarse de forma legible.
+ * 
+ * Ejemplo: "12 nov 2025"
+ * 
+ * @param {string} fecha - Fecha en formato ISO o UTC.
+ * @returns {string} Fecha formateada en español o "N/A" si no es válida.
  */
 function formatearFecha(fecha) {
   if (!fecha) return "N/A";
@@ -131,5 +192,11 @@ function formatearFecha(fecha) {
   return date.toLocaleDateString('es-ES', options);
 }
 
-// Ejecuta la carga de cursos al cargar la página
+// ============================
+// EJECUCIÓN AUTOMÁTICA
+// ============================
+
+/**
+ * Ejecuta la función de inicialización cuando el documento ha cargado.
+ */
 window.addEventListener("DOMContentLoaded", inicializar);
